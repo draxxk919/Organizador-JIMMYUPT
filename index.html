@@ -1,3 +1,7468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>UniOrganiza 2.0</title>
+
+<style>
+
+:root{
+    --primary:#7065ff;
+    --primary2:#958cff;
+    --bg:#f5f6fb;
+    --card:#ffffff;
+    --text:#24263a;
+    --muted:#85889b;
+    --border:#e7e8f0;
+    --sidebar:#171827;
+    --sidebar-hover:#26283d;
+    --success:#32c68b;
+    --danger:#ef5362;
+    --warning:#f3a93d;
+    --shadow:0 12px 35px rgba(27,30,55,.08);
+}
+
+body.dark{
+    --bg:#10111a;
+    --card:#1a1c29;
+    --text:#f4f4fb;
+    --muted:#a2a5b8;
+    --border:#2c2e3d;
+    --sidebar:#090a10;
+    --sidebar-hover:#252738;
+    --shadow:0 12px 35px rgba(0,0,0,.28);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition:.25s;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:255px;
+    background:var(--sidebar);
+    color:white;
+    padding:24px 16px;
+    z-index:1000;
+    transition:.25s;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:0 9px;
+    margin-bottom:38px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    font-size:20px;
+    font-weight:bold;
+    box-shadow:0 8px 20px rgba(112,101,255,.3);
+}
+
+.logo strong{
+    display:block;
+    font-size:19px;
+}
+
+.logo small{
+    display:block;
+    color:#77798c;
+    font-size:9px;
+    margin-top:3px;
+    letter-spacing:.8px;
+}
+
+.menu-title{
+    color:#686a7e;
+    font-size:9px;
+    letter-spacing:1.4px;
+    margin:0 13px 8px;
+}
+
+.nav-btn{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#a8aabd;
+    text-align:left;
+    padding:13px 14px;
+    border-radius:11px;
+    margin:3px 0;
+    cursor:pointer;
+    font-size:14px;
+    transition:.2s;
+}
+
+.nav-btn:hover{
+    color:white;
+    background:var(--sidebar-hover);
+}
+
+.nav-btn.active{
+    color:white;
+    background:linear-gradient(135deg,#655cff,#8177ff);
+    box-shadow:0 8px 18px rgba(101,92,255,.23);
+}
+
+.sidebar-bottom{
+    position:absolute;
+    bottom:22px;
+    left:27px;
+    color:#65677a;
+    font-size:11px;
+    line-height:1.6;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+    margin-left:255px;
+    min-height:100vh;
+}
+
+.topbar{
+    min-height:88px;
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    padding:14px 32px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.mobile-menu{
+    display:none;
+    border:0;
+    background:transparent;
+    color:var(--text);
+    font-size:23px;
+    margin-right:15px;
+    cursor:pointer;
+}
+
+.topbar-title h1{
+    font-size:22px;
+}
+
+.topbar-title p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:4px;
+}
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-left:auto;
+}
+
+/* =========================
+   BUSCADOR
+========================= */
+
+.search{
+    position:relative;
+}
+
+.search span{
+    position:absolute;
+    left:12px;
+    top:10px;
+}
+
+.search input{
+    width:270px;
+    background:var(--bg);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:11px 15px 11px 38px;
+    outline:none;
+}
+
+.search input:focus{
+    border-color:var(--primary);
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border:1px solid var(--border);
+    border-radius:11px;
+    background:var(--card);
+    color:var(--text);
+    cursor:pointer;
+    font-size:17px;
+    transition:.2s;
+}
+
+.icon-btn:hover{
+    transform:translateY(-2px);
+}
+
+.avatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#e8e5ff;
+    color:#5e55d9;
+    font-weight:bold;
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+
+.content{
+    padding:28px 32px 50px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* =========================
+   SALUDO
+========================= */
+
+.welcome{
+    background:linear-gradient(135deg,#6158f3,#9187ff);
+    border-radius:22px;
+    padding:32px;
+    color:white;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 15px 35px rgba(101,92,255,.22);
+}
+
+.welcome::after{
+    content:"";
+    position:absolute;
+    width:270px;
+    height:270px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    right:-80px;
+    top:-120px;
+}
+
+.welcome-content{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.welcome small{
+    opacity:.75;
+    letter-spacing:1.2px;
+    font-size:10px;
+}
+
+.welcome h2{
+    font-size:30px;
+    margin:8px 0 7px;
+}
+
+.welcome p{
+    opacity:.9;
+    max-width:650px;
+    line-height:1.5;
+}
+
+.voice-btn{
+    background:white;
+    color:#5d54d8;
+    border:0;
+    border-radius:11px;
+    padding:12px 17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* =========================
+   ESTADÍSTICAS
+========================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin:20px 0;
+}
+
+.stat{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:19px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    box-shadow:var(--shadow);
+}
+
+.stat-icon{
+    width:46px;
+    height:46px;
+    border-radius:13px;
+    background:#eceaff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+}
+
+.stat strong{
+    display:block;
+    font-size:23px;
+}
+
+.stat small{
+    color:var(--muted);
+}
+
+/* =========================
+   TARJETAS
+========================= */
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:1.25fr .75fr;
+    gap:18px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:21px;
+    box-shadow:var(--shadow);
+}
+
+.card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:12px;
+}
+
+.card-header h3{
+    font-size:16px;
+}
+
+.link-btn{
+    border:0;
+    background:transparent;
+    color:var(--primary);
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* =========================
+   SECCIONES
+========================= */
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:22px;
+}
+
+.section-head h2{
+    font-size:25px;
+}
+
+.section-head p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:5px;
+}
+
+.btn{
+    border:0;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    color:white;
+    border-radius:10px;
+    padding:12px 17px;
+    cursor:pointer;
+    font-weight:bold;
+    box-shadow:0 7px 17px rgba(112,101,255,.18);
+}
+
+/* =========================
+   CURSOS
+========================= */
+
+.course-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:17px;
+}
+
+.course{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-top:5px solid var(--course);
+    border-radius:16px;
+    padding:20px;
+    box-shadow:var(--shadow);
+    transition:.2s;
+}
+
+.course:hover{
+    transform:translateY(-4px);
+}
+
+.course-icon{
+    font-size:27px;
+    margin-bottom:12px;
+}
+
+.course h3{
+    margin-bottom:6px;
+}
+
+.course p{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:18px;
+}
+
+.small-btn{
+    border:0;
+    background:var(--bg);
+    color:var(--text);
+    padding:8px 11px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* =========================
+   TAREAS
+========================= */
+
+.task{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.task:last-child{
+    border-bottom:0;
+}
+
+.check{
+    width:22px;
+    height:22px;
+    border:2px solid #cfd1dd;
+    border-radius:6px;
+    background:transparent;
+    cursor:pointer;
+    color:white;
+    flex:none;
+}
+
+.check.completed{
+    background:var(--primary);
+    border-color:var(--primary);
+}
+
+.task-info{
+    flex:1;
+    min-width:0;
+}
+
+.task-info strong{
+    display:block;
+    font-size:14px;
+}
+
+.task-info small{
+    color:var(--muted);
+    display:block;
+    margin-top:4px;
+}
+
+.task-info.done strong{
+    color:var(--muted);
+    text-decoration:line-through;
+}
+
+.date{
+    color:var(--primary);
+    font-size:11px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.priority{
+    font-size:10px;
+    font-weight:bold;
+    border-radius:20px;
+    padding:5px 8px;
+}
+
+.priority.alta{
+    background:#ffe6e9;
+    color:#d94352;
+}
+
+.priority.media{
+    background:#fff0d7;
+    color:#c98214;
+}
+
+.priority.baja{
+    background:#e2f7ee;
+    color:#248c67;
+}
+
+.delete{
+    border:0;
+    background:var(--bg);
+    color:var(--text);
+    border-radius:8px;
+    padding:8px;
+    cursor:pointer;
+}
+
+/* =========================
+   FILTROS
+========================= */
+
+.filters{
+    display:flex;
+    gap:8px;
+    margin-bottom:15px;
+    flex-wrap:wrap;
+}
+
+.filter{
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    padding:9px 13px;
+    border-radius:9px;
+    cursor:pointer;
+}
+
+.filter.active{
+    background:#ebe9ff;
+    color:#5d54d8;
+    border-color:#d8d5ff;
+}
+
+/* =========================
+   BUSCADOR RESULTADOS
+========================= */
+
+.search-results{
+    display:none;
+    position:fixed;
+    top:72px;
+    right:105px;
+    width:360px;
+    max-height:430px;
+    overflow:auto;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:15px;
+    padding:10px;
+    box-shadow:0 20px 50px rgba(0,0,0,.18);
+    z-index:2000;
+}
+
+.search-results.show{
+    display:block;
+}
+
+.result{
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.result:hover{
+    background:var(--bg);
+}
+
+.result strong{
+    display:block;
+    font-size:13px;
+}
+
+.result small{
+    color:var(--muted);
+}
+
+/* =========================
+   MODALES
+========================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(7,8,18,.58);
+    z-index:3000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:440px;
+    max-width:100%;
+    background:var(--card);
+    border-radius:18px;
+    padding:27px;
+    position:relative;
+    box-shadow:0 25px 60px rgba(0,0,0,.25);
+}
+
+.modal-box h2{
+    margin-bottom:18px;
+}
+
+.close{
+    position:absolute;
+    right:16px;
+    top:11px;
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    font-size:27px;
+    cursor:pointer;
+}
+
+label{
+    display:block;
+    margin:14px 0;
+    font-size:12px;
+    font-weight:bold;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:11px;
+    margin-top:7px;
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    border-radius:9px;
+    outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--primary);
+}
+
+.full{
+    width:100%;
+}
+
+.empty{
+    color:var(--muted);
+    text-align:center;
+    padding:35px 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1050px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .course-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:800px){
+
+    .sidebar{
+        transform:translateX(-100%);
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .topbar{
+        padding:13px 18px;
+    }
+
+    .search input{
+        width:180px;
+    }
+
+    .content{
+        padding:20px 17px 40px;
+    }
+
+    .dashboard-grid{
+        grid-template-columns:1fr;
+    }
+
+    .welcome-content{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+}
+
+@media(max-width:560px){
+
+    .topbar-title p{
+        display:none;
+    }
+
+    .search{
+        display:none;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .course-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section-head{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .task{
+        flex-wrap:wrap;
+    }
+
+    .search-results{
+        left:15px;
+        right:15px;
+        width:auto;
+    }
+
+}
+/* =========================
+   CALENDARIO - PARTE 2
+========================= */
+
+.calendar-actions{
+    display:flex;
+    gap:9px;
+}
+
+.secondary-btn{
+    background:var(--card);
+    color:var(--text);
+    border:1px solid var(--border);
+    box-shadow:none;
+}
+
+.calendar-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+    box-shadow:var(--shadow);
+}
+
+.calendar-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:24px;
+}
+
+.calendar-title-area{
+    text-align:center;
+}
+
+.calendar-title-area small{
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:1.4px;
+}
+
+.calendar-title-area h2{
+    font-size:23px;
+    margin-top:4px;
+    text-transform:capitalize;
+}
+
+.calendar-arrow{
+    width:43px;
+    height:43px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    cursor:pointer;
+    font-size:17px;
+    transition:.2s;
+}
+
+.calendar-arrow:hover{
+    background:var(--primary);
+    color:white;
+    border-color:var(--primary);
+    transform:scale(1.05);
+}
+
+.calendar-weekdays{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:7px;
+    margin-bottom:7px;
+}
+
+.calendar-weekdays div{
+    text-align:center;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:bold;
+    padding:7px;
+}
+
+.calendar-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:7px;
+}
+
+.calendar-day{
+    position:relative;
+    min-height:115px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:9px;
+    background:var(--card);
+    cursor:pointer;
+    transition:.18s;
+    overflow:hidden;
+}
+
+.calendar-day:hover{
+    border-color:var(--primary);
+    transform:translateY(-2px);
+    box-shadow:0 7px 18px rgba(70,65,130,.08);
+}
+
+.calendar-day.other-month{
+    opacity:.32;
+}
+
+.calendar-day.today{
+    border:2px solid var(--primary);
+    background:rgba(112,101,255,.06);
+}
+
+.calendar-day.selected{
+    box-shadow:0 0 0 2px var(--primary);
+}
+
+.calendar-number{
+    width:27px;
+    height:27px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.calendar-day.today .calendar-number{
+    background:var(--primary);
+    color:white;
+}
+
+.calendar-event{
+    display:block;
+    width:100%;
+    border-radius:6px;
+    padding:5px 6px;
+    margin-top:4px;
+    font-size:9px;
+    font-weight:bold;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    background:#ebe9ff;
+    color:#5b52d7;
+}
+
+.calendar-event.high{
+    background:#ffe4e7;
+    color:#d83f50;
+}
+
+.calendar-event.completed{
+    background:#ddf7eb;
+    color:#23865f;
+    text-decoration:line-through;
+}
+
+.calendar-more{
+    color:var(--muted);
+    font-size:9px;
+    padding:5px 3px;
+}
+
+.calendar-bottom{
+    display:grid;
+    grid-template-columns:1.35fr .65fr;
+    gap:18px;
+    margin-top:18px;
+}
+
+.calendar-selected-date{
+    display:block;
+    color:var(--muted);
+    margin-top:5px;
+    text-transform:capitalize;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.legend-item:last-of-type{
+    border-bottom:0;
+}
+
+.legend-item strong{
+    display:block;
+    font-size:13px;
+}
+
+.legend-item small{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.legend-dot{
+    width:14px;
+    height:14px;
+    border-radius:5px;
+    flex:none;
+}
+
+.legend-dot.normal{
+    background:#8177ff;
+}
+
+.legend-dot.urgent{
+    background:#ef5362;
+}
+
+.legend-dot.completed{
+    background:#32c68b;
+}
+
+.calendar-tip{
+    background:var(--bg);
+    color:var(--muted);
+    padding:13px;
+    border-radius:10px;
+    margin-top:15px;
+    font-size:11px;
+    line-height:1.5;
+}
+
+/* TABLET */
+
+@media(max-width:850px){
+
+    .calendar-bottom{
+        grid-template-columns:1fr;
+    }
+
+    .calendar-day{
+        min-height:90px;
+    }
+
+}
+
+/* CELULAR */
+
+@media(max-width:600px){
+
+    .calendar-actions{
+        width:100%;
+    }
+
+    .calendar-actions .btn{
+        flex:1;
+    }
+
+    .calendar-card{
+        overflow-x:auto;
+        padding:13px;
+    }
+
+    .calendar-header{
+        min-width:650px;
+    }
+
+    .calendar-weekdays,
+    .calendar-grid{
+        min-width:650px;
+    }
+
+}
+/* =========================
+   NOTAS - PARTE 3
+========================= */
+
+.grades-summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:20px;
+}
+
+.grade-summary-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:22px;
+    box-shadow:var(--shadow);
+}
+
+.grade-summary-card small{
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:1.2px;
+}
+
+.grade-summary-card strong{
+    display:block;
+    font-size:32px;
+    margin:8px 0 4px;
+}
+
+.grade-summary-card span{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.grades-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.grade-course-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:20px;
+    box-shadow:var(--shadow);
+}
+
+.grade-course-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px;
+}
+
+.grade-course-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.grade-color{
+    width:13px;
+    height:13px;
+    border-radius:5px;
+    flex:none;
+}
+
+.grade-course-title h3{
+    font-size:16px;
+}
+
+.course-average{
+    background:var(--bg);
+    border:1px solid var(--border);
+    padding:8px 11px;
+    border-radius:10px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.grade-row{
+    display:grid;
+    grid-template-columns:1fr auto auto auto;
+    gap:10px;
+    align-items:center;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.grade-row:last-child{
+    border-bottom:0;
+}
+
+.grade-row strong{
+    font-size:13px;
+}
+
+.grade-row small{
+    display:block;
+    margin-top:3px;
+    color:var(--muted);
+}
+
+.grade-value{
+    font-size:15px;
+    font-weight:bold;
+}
+
+.grade-weight{
+    font-size:10px;
+    color:var(--muted);
+    white-space:nowrap;
+}
+
+.grade-delete{
+    border:0;
+    background:var(--bg);
+    color:var(--text);
+    border-radius:8px;
+    padding:7px;
+    cursor:pointer;
+}
+
+.grade-empty{
+    color:var(--muted);
+    padding:18px 0;
+    text-align:center;
+    font-size:12px;
+}
+
+@media(max-width:850px){
+
+    .grades-summary{
+        grid-template-columns:1fr;
+    }
+
+    .grades-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:560px){
+
+    .grade-row{
+        grid-template-columns:1fr auto;
+    }
+
+    .grade-weight{
+        display:none;
+    }
+
+}
+/* =========================
+   LOGIN - PARTE 4A
+========================= */
+
+.login-screen{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:
+        radial-gradient(circle at top left, rgba(112,101,255,.35), transparent 35%),
+        linear-gradient(135deg,#111321,#1f2140);
+}
+
+.login-screen.hidden{
+    display:none;
+}
+
+.login-box{
+    width:390px;
+    max-width:100%;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:34px;
+    box-shadow:0 30px 80px rgba(0,0,0,.35);
+    text-align:center;
+}
+
+.login-logo{
+    width:62px;
+    height:62px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 16px;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    color:white;
+    font-size:27px;
+    font-weight:bold;
+}
+
+.login-box h1{
+    font-size:27px;
+    margin-bottom:7px;
+}
+
+.login-box > p{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:24px;
+}
+
+.login-box label{
+    text-align:left;
+}
+
+.login-box small{
+    display:block;
+    color:var(--muted);
+    margin-top:20px;
+    font-size:10px;
+}
+
+.login-message{
+    min-height:20px;
+    margin-top:13px;
+    color:var(--danger);
+    font-size:12px;
+    font-weight:bold;
+}
+/* =========================
+   ARCHIVOS - PARTE 4B
+========================= */
+
+.files-toolbar{
+    display:flex;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.files-toolbar input,
+.files-toolbar select{
+    margin-top:0;
+}
+
+.files-toolbar input{
+    flex:1;
+}
+
+.files-toolbar select{
+    max-width:260px;
+}
+
+.files-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+}
+
+.file-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:19px;
+    box-shadow:var(--shadow);
+}
+
+.file-icon{
+    width:48px;
+    height:48px;
+    border-radius:13px;
+    background:var(--bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    margin-bottom:13px;
+}
+
+.file-card h3{
+    font-size:14px;
+    margin-bottom:7px;
+    word-break:break-word;
+}
+
+.file-card p{
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.5;
+    min-height:34px;
+}
+
+.file-meta{
+    margin-top:12px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.7;
+}
+
+.file-actions{
+    display:flex;
+    gap:8px;
+    margin-top:15px;
+}
+
+.file-actions button{
+    flex:1;
+}
+
+.file-open{
+    border:0;
+    background:var(--primary);
+    color:white;
+    border-radius:8px;
+    padding:9px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.file-delete{
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    border-radius:8px;
+    padding:9px;
+    cursor:pointer;
+}
+
+@media(max-width:950px){
+
+    .files-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .files-grid{
+        grid-template-columns:1fr;
+    }
+
+    .files-toolbar{
+        flex-direction:column;
+    }
+
+    .files-toolbar select{
+        max-width:none;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN - PARTE 4A
+========================= -->
+
+<div id="loginScreen" class="login-screen">
+
+    <div class="login-box">
+
+        <div class="login-logo">
+            U
+        </div>
+
+        <h1>UniOrganiza</h1>
+
+        <p>
+            Inicia sesión para continuar
+        </p>
+
+        <form id="loginForm">
+
+            <label>
+                Correo electrónico
+
+                <input
+id="loginUser"
+type="email"
+placeholder="tu@correo.com"
+autocomplete="email"
+required>
+            </label>
+
+            <label>
+                Contraseña
+
+                <input
+                id="loginPassword"
+                type="password"
+                placeholder="Escribe tu contraseña"
+                required>
+            </label>
+
+            <button class="btn full">
+                Ingresar
+            </button>
+
+        </form>
+
+        <div id="loginMessage" class="login-message">
+        </div>
+
+        <small>
+            UniOrganiza 2.0 · Jimmy Edition
+        </small>
+
+    </div>
+
+</div>
+<!-- =========================
+     MENÚ LATERAL
+========================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            U
+        </div>
+
+        <div>
+
+            <strong>
+                UniOrganiza
+            </strong>
+
+            <small>
+                ASISTENTE UNIVERSITARIO
+            </small>
+
+        </div>
+
+    </div>
+
+    <div class="menu-title">
+        MENÚ PRINCIPAL
+    </div>
+
+    <button
+    class="nav-btn active"
+    data-page="inicio">
+
+        🏠 &nbsp; Inicio
+
+    </button>
+
+    <button
+    class="nav-btn"
+    data-page="cursos">
+
+        📚 &nbsp; Cursos
+
+    </button>
+
+    <button
+    class="nav-btn"
+    data-page="tareas">
+
+        📝 &nbsp; Tareas
+
+    </button>
+    <button
+class="nav-btn"
+data-page="calendario">
+
+    📅 &nbsp; Calendario
+
+</button>
+
+<button
+class="nav-btn"
+data-page="notas">
+
+    📊 &nbsp; Notas
+
+</button>
+
+   <button
+class="nav-btn"
+data-page="archivos">
+
+    📂 &nbsp; Archivos
+
+</button>
+
+    <div class="sidebar-bottom">
+
+        UniOrganiza 2.0
+
+        <br>
+
+        Jimmy Edition
+
+    </div>
+
+</aside>
+
+
+<!-- =========================
+     CONTENIDO PRINCIPAL
+========================= -->
+
+<main class="main">
+
+
+<header class="topbar">
+
+    <button
+    class="mobile-menu"
+    onclick="toggleMenu()">
+
+        ☰
+
+    </button>
+
+    <div class="topbar-title">
+
+        <h1 id="pageTitle">
+            Inicio
+        </h1>
+
+        <p id="pageSubtitle">
+            Tu centro de organización universitaria.
+        </p>
+
+    </div>
+
+    <div class="top-actions">
+
+        <div class="search">
+
+            <span>
+                🔎
+            </span>
+
+            <input
+            id="searchInput"
+            placeholder="Buscar..."
+            oninput="buscar(this.value)">
+
+        </div>
+
+        <button
+        class="icon-btn"
+        id="themeButton"
+        onclick="toggleTheme()"
+        title="Modo oscuro">
+
+            🌙
+
+        </button>
+
+        <button
+        class="icon-btn"
+        onclick="hablar()"
+        title="Escuchar asistente">
+
+            🔊
+
+        </button>
+
+<button
+class="icon-btn"
+onclick="cerrarSesion()"
+title="Cerrar sesión">
+
+    🚪
+
+</button>
+
+<div class="avatar">
+    J
+</div>
+
+    </div>
+
+</header>
+
+
+<div
+class="search-results"
+id="searchResults">
+</div>
+
+
+<div class="content">
+
+
+<!-- =========================
+     INICIO
+========================= -->
+
+<section
+id="inicio"
+class="page active">
+
+    <div class="welcome">
+
+        <div class="welcome-content">
+
+            <div>
+
+                <small>
+                    ✨ TU ASISTENTE UNIVERSITARIO
+                </small>
+
+                <h2 id="saludo">
+                    Hola, Jimmy 👋
+                </h2>
+
+                <p id="mensajeAsistente">
+                    Estoy revisando tus tareas...
+                </p>
+
+            </div>
+
+            <button
+            class="voice-btn"
+            onclick="hablar()">
+
+                🔊 Escuchar a Uni
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📚
+            </div>
+
+            <div>
+
+                <strong id="statCursos">
+                    0
+                </strong>
+
+                <small>
+                    Cursos
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📝
+            </div>
+
+            <div>
+
+                <strong id="statPendientes">
+                    0
+                </strong>
+
+                <small>
+                    Pendientes
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🔥
+            </div>
+
+            <div>
+
+                <strong id="statUrgentes">
+                    0
+                </strong>
+
+                <small>
+                    Urgentes
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <div>
+
+                <strong id="statCompletadas">
+                    0
+                </strong>
+
+                <small>
+                    Completadas
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3>
+                    📌 Próximas tareas
+                </h3>
+
+                <button
+                class="link-btn"
+                onclick="showPage('tareas')">
+
+                    Ver todas
+
+                </button>
+
+            </div>
+
+            <div id="homeTasks">
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3>
+                    📚 Mis cursos
+                </h3>
+
+                <button
+                class="link-btn"
+                onclick="showPage('cursos')">
+
+                    Gestionar
+
+                </button>
+
+            </div>
+
+            <div id="homeCourses">
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CURSOS
+========================= -->
+
+<section
+id="cursos"
+class="page">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                📚 Mis cursos
+            </h2>
+
+            <p>
+                Organiza tus materias.
+            </p>
+
+        </div>
+
+        <button
+        class="btn"
+        onclick="abrirModal('courseModal')">
+
+            + Agregar curso
+
+        </button>
+
+    </div>
+
+    <div
+    class="course-grid"
+    id="courseGrid">
+    </div>
+
+</section>
+
+
+<!-- =========================
+     TAREAS
+========================= -->
+
+<section
+id="tareas"
+class="page">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                📝 Mis tareas
+            </h2>
+
+            <p>
+                Organiza trabajos y entregas.
+            </p>
+
+        </div>
+
+        <button
+        class="btn"
+        onclick="abrirTarea()">
+
+            + Nueva tarea
+
+        </button>
+
+    </div>
+
+
+    <div class="filters">
+
+        <button
+        class="filter active"
+        onclick="filtrar('todas',this)">
+
+            Todas
+
+        </button>
+
+        <button
+        class="filter"
+        onclick="filtrar('pendientes',this)">
+
+            Pendientes
+
+        </button>
+
+        <button
+        class="filter"
+        onclick="filtrar('completadas',this)">
+
+            Completadas
+
+        </button>
+
+        <button
+        class="filter"
+        onclick="filtrar('alta',this)">
+
+            🔥 Urgentes
+
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <div id="taskList">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     CALENDARIO - PARTE 2
+========================= -->
+
+<section
+id="calendario"
+class="page">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                📅 Mi calendario
+            </h2>
+
+            <p>
+                Aquí aparecen automáticamente tus tareas y entregas.
+            </p>
+
+        </div>
+
+        <div class="calendar-actions">
+
+            <button
+            class="btn secondary-btn"
+            onclick="irAHoy()">
+
+                Hoy
+
+            </button>
+
+            <button
+            class="btn"
+            onclick="crearTareaDesdeCalendario()">
+
+                + Nueva tarea
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- CALENDARIO -->
+
+    <div class="calendar-card">
+
+        <div class="calendar-header">
+
+            <button
+            class="calendar-arrow"
+            onclick="cambiarMes(-1)"
+            title="Mes anterior">
+
+                ❮
+
+            </button>
+
+
+            <div class="calendar-title-area">
+
+                <small>
+                    CALENDARIO UNIVERSITARIO
+                </small>
+
+                <h2 id="calendarTitle">
+                    Mes
+                </h2>
+
+            </div>
+
+
+            <button
+            class="calendar-arrow"
+            onclick="cambiarMes(1)"
+            title="Mes siguiente">
+
+                ❯
+
+            </button>
+
+        </div>
+
+
+        <!-- DÍAS DE LA SEMANA -->
+
+        <div class="calendar-weekdays">
+
+            <div>Lun</div>
+            <div>Mar</div>
+            <div>Mié</div>
+            <div>Jue</div>
+            <div>Vie</div>
+            <div>Sáb</div>
+            <div>Dom</div>
+
+        </div>
+
+
+        <!-- LOS DÍAS SE CREAN CON JAVASCRIPT -->
+
+        <div
+        class="calendar-grid"
+        id="calendarGrid">
+
+        </div>
+
+    </div>
+
+
+    <!-- PARTE INFERIOR -->
+
+    <div class="calendar-bottom">
+
+
+        <!-- TAREAS DEL DÍA -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+                        📌 Actividades del día
+                    </h3>
+
+                    <small
+                    class="calendar-selected-date"
+                    id="selectedDateText">
+
+                        Selecciona una fecha
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div id="dayTasks">
+
+                <div class="empty">
+
+                    📅 Haz clic en un día para ver tus actividades.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LEYENDA -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3>
+                    🎨 Leyenda
+                </h3>
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <span
+                class="legend-dot normal">
+                </span>
+
+                <div>
+
+                    <strong>
+                        Tarea
+                    </strong>
+
+                    <small>
+                        Actividad normal
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <span
+                class="legend-dot urgent">
+                </span>
+
+                <div>
+
+                    <strong>
+                        Urgente
+                    </strong>
+
+                    <small>
+                        Prioridad alta
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <span
+                class="legend-dot completed">
+                </span>
+
+                <div>
+
+                    <strong>
+                        Completada
+                    </strong>
+
+                    <small>
+                        Actividad terminada
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="calendar-tip">
+
+                💡 <b>Consejo:</b>
+
+                haz clic en cualquier día para crear una tarea directamente en esa fecha.
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+<!-- =========================
+     NOTAS - PARTE 3
+========================= -->
+
+<section
+id="notas"
+class="page">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                📊 Mis notas
+            </h2>
+
+            <p>
+                Guarda tus calificaciones y calcula promedios automáticamente.
+            </p>
+
+        </div>
+
+        <button
+        class="btn"
+        onclick="abrirNota()">
+
+            + Agregar nota
+
+        </button>
+
+    </div>
+
+
+    <div class="grades-summary">
+
+        <div class="grade-summary-card">
+
+            <small>
+                PROMEDIO GENERAL
+            </small>
+
+            <strong id="promedioGeneral">
+                --
+            </strong>
+
+            <span>
+                considerando todos tus cursos
+            </span>
+
+        </div>
+
+        <div class="grade-summary-card">
+
+            <small>
+                NOTAS REGISTRADAS
+            </small>
+
+            <strong id="totalNotas">
+                0
+            </strong>
+
+            <span>
+                calificaciones guardadas
+            </span>
+
+        </div>
+
+        <div class="grade-summary-card">
+
+            <small>
+                CURSOS CON NOTAS
+            </small>
+
+            <strong id="cursosConNotas">
+                0
+            </strong>
+
+            <span>
+                materias evaluadas
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div
+    id="gradesByCourse"
+    class="grades-grid">
+
+    </div>
+
+</section>
+
+<!-- =========================
+     ARCHIVOS - PARTE 4B
+========================= -->
+
+<section
+id="archivos"
+class="page">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                📂 Mis archivos
+            </h2>
+
+            <p>
+                Guarda documentos y materiales de tus cursos.
+            </p>
+
+        </div>
+
+        <button
+        class="btn"
+        onclick="abrirArchivo()">
+
+            + Subir archivo
+
+        </button>
+
+    </div>
+
+
+    <div class="files-toolbar">
+
+        <input
+        id="fileSearch"
+        type="text"
+        placeholder="Buscar archivo..."
+        oninput="mostrarArchivos()">
+
+        <select
+        id="fileCourseFilter"
+        onchange="mostrarArchivos()">
+
+            <option value="">
+                Todos los cursos
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div
+    id="filesGrid"
+    class="files-grid">
+
+    </div>
+
+</section>
+</div>
+
+</main>
+
+
+<!-- =========================
+     MODAL CURSO
+========================= -->
+
+<div
+class="modal"
+id="courseModal">
+
+    <div class="modal-box">
+
+        <button
+        class="close"
+        onclick="cerrarModal('courseModal')">
+
+            ×
+
+        </button>
+
+        <h2>
+            📚 Nuevo curso
+        </h2>
+
+        <form id="courseForm">
+
+            <label>
+
+                Nombre del curso
+
+                <input
+                id="courseName"
+                required
+                placeholder="Ej. Matemática">
+
+            </label>
+
+            <label>
+
+                Profesor
+
+                <input
+                id="courseTeacher"
+                placeholder="Ej. Prof. García">
+
+            </label>
+
+            <label>
+
+                Color
+
+                <input
+                id="courseColor"
+                type="color"
+                value="#7065ff">
+
+            </label>
+
+            <button
+            class="btn full">
+
+                Guardar curso
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MODAL TAREA
+========================= -->
+
+<div
+class="modal"
+id="taskModal">
+
+    <div class="modal-box">
+
+        <button
+        class="close"
+        onclick="cerrarModal('taskModal')">
+
+            ×
+
+        </button>
+
+        <h2>
+            📝 Nueva tarea
+        </h2>
+
+        <form id="taskForm">
+
+            <label>
+
+                Nombre
+
+                <input
+                id="taskName"
+                required
+                placeholder="Ej. Exposición">
+
+            </label>
+
+            <label>
+
+                Curso
+
+                <select
+                id="taskCourse"
+                required>
+                </select>
+
+            </label>
+
+            <label>
+
+                Fecha de entrega
+
+                <input
+                id="taskDate"
+                type="date"
+                required>
+
+            </label>
+
+            <label>
+
+                Prioridad
+
+                <select id="taskPriority">
+
+                    <option value="baja">
+                        🟢 Baja
+                    </option>
+
+                    <option
+                    value="media"
+                    selected>
+
+                        🟡 Media
+
+                    </option>
+
+                    <option value="alta">
+                        🔴 Alta
+                    </option>
+
+                </select>
+
+            </label>
+
+            <label>
+
+                Descripción
+
+                <textarea
+                id="taskDescription"
+                rows="3"
+                placeholder="Detalles de la tarea..."></textarea>
+
+            </label>
+
+            <button
+            class="btn full">
+
+                Guardar tarea
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     MODAL NOTA
+========================= -->
+
+<div
+class="modal"
+id="gradeModal">
+
+    <div class="modal-box">
+
+        <button
+        class="close"
+        onclick="cerrarModal('gradeModal')">
+
+            ×
+
+        </button>
+
+        <h2>
+            📊 Nueva nota
+        </h2>
+
+        <form id="gradeForm">
+
+            <label>
+
+                Curso
+
+                <select
+                id="gradeCourse"
+                required>
+                </select>
+
+            </label>
+
+            <label>
+
+                Evaluación
+
+                <input
+                id="gradeName"
+                required
+                placeholder="Ej. Examen parcial">
+
+            </label>
+
+            <label>
+
+                Nota
+
+                <input
+                id="gradeValue"
+                type="number"
+                min="0"
+                max="20"
+                step="0.1"
+                required
+                placeholder="Ej. 16">
+
+            </label>
+
+            <label>
+
+                Peso en el promedio (%)
+
+                <input
+                id="gradeWeight"
+                type="number"
+                min="0"
+                max="100"
+                step="0.1"
+                value="0"
+                placeholder="Ej. 30">
+
+            </label>
+
+            <button
+            class="btn full">
+
+                Guardar nota
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     MODAL ARCHIVO
+========================= -->
+
+<div
+class="modal"
+id="fileModal">
+
+    <div class="modal-box">
+
+        <button
+        class="close"
+        onclick="cerrarModal('fileModal')">
+
+            ×
+
+        </button>
+
+        <h2>
+            📂 Subir archivo
+        </h2>
+
+        <form id="fileForm">
+
+            <label>
+
+                Curso
+
+                <select
+                id="fileCourse"
+                required>
+                </select>
+
+            </label>
+
+            <label>
+
+                Archivo
+
+                <input
+                id="fileInput"
+                type="file"
+                required>
+
+            </label>
+
+            <label>
+
+                Descripción
+
+                <textarea
+                id="fileDescription"
+                rows="3"
+                placeholder="Ej. Material de la semana 3"></textarea>
+
+            </label>
+
+            <button
+            class="btn full">
+
+                Guardar archivo
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+
+<script>
+
+/* =====================================================
+   CONFIGURACIÓN GENERAL
+===================================================== */
+
+const NOMBRE_USUARIO = "Jimmy";
+const STORAGE = "UniOrganiza2";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDvcFO44yHMUkCSK6iiXE4ef-HztGLtPnU",
+    authDomain: "uniorganiza-992b9.firebaseapp.com",
+    projectId: "uniorganiza-992b9",
+    storageBucket: "uniorganiza-992b9.firebasestorage.app",
+    messagingSenderId: "766838365172",
+    appId: "1:766838365172:web:ad286c1eb7b0b4e246b7a1"
+};
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let detenerSincronizacion = null;
+let cargandoNube = false;
+
+let datos;
+
+try {
+
+    datos = JSON.parse(localStorage.getItem(STORAGE));
+
+} catch(error) {
+
+    datos = null;
+
+}
+
+
+/* DATOS INICIALES */
+
+if(!datos){
+
+    datos = {
+
+        cursos:[
+
+            {
+                id:1,
+                nombre:"Matemática",
+                profesor:"Profesor",
+                color:"#7065ff"
+            },
+
+            {
+                id:2,
+                nombre:"Contabilidad",
+                profesor:"Profesor",
+                color:"#ef6c75"
+            }
+
+        ],
+
+        tareas:[
+
+            {
+                id:1,
+                nombre:"Resolver ejercicios",
+                cursoId:1,
+                fecha:"2026-09-06",
+                prioridad:"media",
+                descripcion:"Ejercicios de la semana",
+                completada:false
+            },
+
+            {
+                id:2,
+                nombre:"Trabajo de contabilidad",
+                cursoId:2,
+                fecha:"2026-09-10",
+                prioridad:"alta",
+                descripcion:"Preparar el trabajo",
+                completada:false
+            }
+
+        ],
+
+        tema:"claro"
+
+    };
+
+}
+
+
+/* POR SI ACTUALIZAMOS LA APP */
+
+if(!Array.isArray(datos.cursos)){
+    datos.cursos=[];
+}
+
+if(!Array.isArray(datos.tareas)){
+    datos.tareas=[];
+}
+
+if(!Array.isArray(datos.notas)){
+    datos.notas=[];
+}
+
+if(!datos.tema){
+    datos.tema="claro";
+}
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let filtroActual = "todas";
+
+let fechaCalendario = new Date();
+
+let fechaSeleccionada = fechaLocalISO(new Date());
+
+/* =====================================================
+   LOGIN - PARTE 4A
+===================================================== */
+
+const loginForm =
+document.getElementById(
+    "loginForm"
+);
+
+if(loginForm){
+
+    loginForm.addEventListener(
+        "submit",
+        function(e){
+
+            e.preventDefault();
+
+            const correo =
+            document
+            .getElementById("loginUser")
+            .value
+            .trim();
+
+            const password =
+            document
+            .getElementById("loginPassword")
+            .value;
+
+            const mensaje =
+            document.getElementById(
+                "loginMessage"
+            );
+
+            if(mensaje){
+                mensaje.textContent =
+                "Ingresando...";
+            }
+
+            auth
+            .signInWithEmailAndPassword(
+                correo,
+                password
+            )
+            .then(function(){
+
+                if(mensaje){
+                    mensaje.textContent="";
+                }
+
+                mostrarApp();
+
+                hablarBienvenidaLogin();
+
+            })
+            .catch(function(error){
+
+                console.error(
+                    "Error de inicio de sesión:",
+                    error
+                );
+
+                if(mensaje){
+
+                    if(
+                        error.code ===
+                        "auth/invalid-credential"
+                    ){
+
+                        mensaje.textContent =
+                        "Correo o contraseña incorrectos.";
+
+                    }
+                    else if(
+                        error.code ===
+                        "auth/invalid-email"
+                    ){
+
+                        mensaje.textContent =
+                        "El correo no es válido.";
+
+                    }
+                    else if(
+                        error.code ===
+                        "auth/too-many-requests"
+                    ){
+
+                        mensaje.textContent =
+                        "Demasiados intentos. Intenta nuevamente más tarde.";
+
+                    }
+                    else{
+
+    mensaje.textContent =
+    "No se pudo iniciar sesión.";
+
+}
+
+                }
+
+            });
+
+        }
+    );
+
+}
+
+
+function mostrarApp(){
+
+    const login =
+    document.getElementById(
+        "loginScreen"
+    );
+
+    if(login){
+
+        login.classList.add(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+function mostrarLogin(){
+
+    const login =
+    document.getElementById(
+        "loginScreen"
+    );
+
+    if(login){
+
+        login.classList.remove(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+function cerrarSesion(){
+
+    const confirmar =
+    confirm(
+        "¿Quieres cerrar sesión?"
+    );
+
+    if(!confirmar){
+        return;
+    }
+
+    auth
+    .signOut()
+    .then(function(){
+
+        const user =
+        document.getElementById(
+            "loginUser"
+        );
+
+        const password =
+        document.getElementById(
+            "loginPassword"
+        );
+
+        if(user){
+            user.value="";
+        }
+
+        if(password){
+            password.value="";
+        }
+
+        showPage("inicio");
+
+        mostrarLogin();
+
+    })
+    .catch(function(error){
+
+        console.error(
+            "Error al cerrar sesión:",
+            error
+        );
+
+    });
+
+}
+
+
+function comprobarSesion(){
+
+    auth.onAuthStateChanged(
+        function(usuario){
+
+            if(usuario){
+
+                mostrarApp();
+
+                iniciarSincronizacion(
+                    usuario
+                );
+
+            }
+            else{
+
+                if(
+                    detenerSincronizacion
+                ){
+
+                    detenerSincronizacion();
+
+                    detenerSincronizacion =
+                    null;
+
+                }
+
+                mostrarLogin();
+
+            }
+
+        }
+    );
+
+}
+
+function hablarBienvenidaLogin(){
+
+    if(
+        !("speechSynthesis" in window)
+    ){
+
+        return;
+
+    }
+
+    speechSynthesis.cancel();
+
+    const mensaje =
+    new SpeechSynthesisUtterance(
+        "Hola Jimmy. Bienvenido nuevamente a Uni Organiza."
+    );
+
+    const voces =
+    speechSynthesis.getVoices();
+
+    const voz =
+    voces.find(
+        function(v){
+
+            return v.lang==="es-PE";
+
+        }
+    )
+    ||
+    voces.find(
+        function(v){
+
+            return v.lang.startsWith("es");
+
+        }
+    );
+
+    if(voz){
+        mensaje.voice=voz;
+    }
+
+    mensaje.lang="es-PE";
+    mensaje.rate=.92;
+    mensaje.pitch=1;
+
+    speechSynthesis.speak(
+        mensaje
+    );
+
+}
+
+
+/* =====================================================
+   GUARDAR DATOS
+===================================================== */
+
+function guardar(){
+
+    try {
+
+        localStorage.setItem(
+            STORAGE,
+            JSON.stringify(datos)
+        );
+
+    } catch(error){
+
+        console.error(
+            "No se pudieron guardar los datos:",
+            error
+        );
+
+    }
+
+
+    const usuario =
+    auth.currentUser;
+
+
+    if(
+        usuario &&
+        !cargandoNube
+    ){
+
+        db
+        .collection("usuarios")
+        .doc(usuario.uid)
+        .collection("datos")
+        .doc("principal")
+        .set(
+            {
+                cursos:
+                datos.cursos || [],
+
+                tareas:
+                datos.tareas || [],
+
+                notas:
+                datos.notas || [],
+
+                tema:
+                datos.tema || "claro"
+            },
+            {
+                merge:true
+            }
+        )
+        .catch(function(error){
+
+            console.error(
+                "No se pudieron guardar los datos en Firebase:",
+                error
+            );
+
+        });
+
+    }
+
+
+    actualizar();
+
+}
+
+
+/* =====================================================
+   NAVEGACIÓN
+===================================================== */
+
+document
+.querySelectorAll("[data-page]")
+.forEach(function(boton){
+
+    boton.addEventListener(
+        "click",
+        function(){
+
+            showPage(
+                boton.getAttribute("data-page")
+            );
+
+        }
+    );
+
+});
+
+
+function showPage(id){
+
+    const pagina =
+    document.getElementById(id);
+
+
+    if(!pagina){
+
+        console.warn(
+            "No existe la página:",
+            id
+        );
+
+        return;
+
+    }
+
+
+    document
+    .querySelectorAll(".page")
+    .forEach(function(p){
+
+        p.classList.remove("active");
+
+    });
+
+
+    pagina.classList.add("active");
+
+
+    document
+    .querySelectorAll(".nav-btn")
+    .forEach(function(b){
+
+        b.classList.remove("active");
+
+    });
+
+
+    const botonActivo =
+    document.querySelector(
+        '[data-page="' + id + '"]'
+    );
+
+
+    if(botonActivo){
+
+        botonActivo.classList.add(
+            "active"
+        );
+
+    }
+
+
+    const info = {
+
+        inicio:[
+            "Inicio",
+            "Tu centro de organización universitaria."
+        ],
+
+        cursos:[
+            "Cursos",
+            "Todas tus materias en un solo lugar."
+        ],
+
+        tareas:[
+            "Tareas",
+            "Controla tus trabajos y fechas de entrega."
+        ],
+
+calendario:[
+    "Calendario",
+    "Visualiza tus tareas y entregas por fecha."
+],
+
+notas:[
+    "Notas",
+    "Controla tus calificaciones y promedios."
+],
+
+    archivos:[
+    "Archivos",
+    "Guarda documentos y materiales de tus cursos."
+]
+
+};
+
+
+if(info[id]){
+
+        const titulo =
+        document.getElementById(
+            "pageTitle"
+        );
+
+        const subtitulo =
+        document.getElementById(
+            "pageSubtitle"
+        );
+
+
+        if(titulo){
+
+            titulo.textContent =
+            info[id][0];
+
+        }
+
+
+        if(subtitulo){
+
+            subtitulo.textContent =
+            info[id][1];
+
+        }
+
+    }
+
+
+    const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+    if(sidebar){
+
+        sidebar.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    const resultados =
+    document.getElementById(
+        "searchResults"
+    );
+
+
+    if(resultados){
+
+        resultados.classList.remove(
+            "show"
+        );
+
+    }
+
+
+    if(id==="calendario"){
+
+        renderCalendario();
+
+        mostrarTareasDelDia(
+            fechaSeleccionada
+        );
+
+    }
+
+if(id==="notas"){
+
+    mostrarNotas();
+
+}
+if(id==="archivos"){
+
+    prepararCursosArchivos();
+
+    mostrarArchivos();
+
+}
+}
+
+
+/* =====================================================
+   MENÚ MÓVIL
+===================================================== */
+
+function toggleMenu(){
+
+    const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+    if(sidebar){
+
+        sidebar.classList.toggle(
+            "open"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   MODALES
+===================================================== */
+
+function abrirModal(id){
+
+    const modal =
+    document.getElementById(id);
+
+
+    if(modal){
+
+        modal.classList.add(
+            "show"
+        );
+
+    }
+
+}
+
+
+function cerrarModal(id){
+
+    const modal =
+    document.getElementById(id);
+
+
+    if(modal){
+
+        modal.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* CERRAR MODAL AL HACER CLIC AFUERA */
+
+document
+.querySelectorAll(".modal")
+.forEach(function(modal){
+
+    modal.addEventListener(
+        "click",
+        function(e){
+
+            if(e.target === modal){
+
+                modal.classList.remove(
+                    "show"
+                );
+
+            }
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   CURSOS
+===================================================== */
+
+const courseForm =
+document.getElementById(
+    "courseForm"
+);
+
+
+if(courseForm){
+
+    courseForm.addEventListener(
+        "submit",
+        function(e){
+
+            e.preventDefault();
+
+
+            const nombreInput =
+            document.getElementById(
+                "courseName"
+            );
+
+            const profesorInput =
+            document.getElementById(
+                "courseTeacher"
+            );
+
+            const colorInput =
+            document.getElementById(
+                "courseColor"
+            );
+
+
+            const nombre =
+            nombreInput.value.trim();
+
+            const profesor =
+            profesorInput.value.trim();
+
+            const color =
+            colorInput.value;
+
+
+            if(!nombre){
+
+                alert(
+                    "Escribe el nombre del curso."
+                );
+
+                return;
+
+            }
+
+
+            datos.cursos.push({
+
+                id:Date.now(),
+
+                nombre:nombre,
+
+                profesor:profesor,
+
+                color:color
+
+            });
+
+
+            courseForm.reset();
+
+            colorInput.value =
+            "#7065ff";
+
+
+           cerrarModal(
+    "courseModal"
+);
+
+guardar();
+
+        }
+    );
+
+}
+
+/* =====================================================
+   ARCHIVOS - PARTE 4B
+===================================================== */
+
+const FILE_DB_NAME =
+"UniOrganizaArchivos";
+
+const FILE_DB_VERSION =
+1;
+
+const FILE_STORE =
+"archivos";
+
+let fileDB = null;
+
+
+function abrirBaseArchivos(){
+
+    return new Promise(
+        function(resolve,reject){
+
+            const request =
+            indexedDB.open(
+                FILE_DB_NAME,
+                FILE_DB_VERSION
+            );
+
+
+            request.onupgradeneeded =
+            function(e){
+
+                const db =
+                e.target.result;
+
+                if(
+                    !db.objectStoreNames
+                    .contains(FILE_STORE)
+                ){
+
+                    db.createObjectStore(
+                        FILE_STORE,
+                        {
+                            keyPath:"id"
+                        }
+                    );
+
+                }
+
+            };
+
+
+            request.onsuccess =
+            function(e){
+
+                fileDB =
+                e.target.result;
+
+                resolve(fileDB);
+
+            };
+
+
+            request.onerror =
+            function(){
+
+                reject(
+                    request.error
+                );
+
+            };
+
+        }
+    );
+
+}
+
+function abrirArchivo(){
+
+    if(datos.cursos.length===0){
+
+        alert(
+            "Jimmy, primero agrega un curso 📚"
+        );
+
+        showPage("cursos");
+
+        return;
+
+    }
+
+    prepararCursosArchivos();
+
+    abrirModal(
+        "fileModal"
+    );
+
+}
+
+
+function prepararCursosArchivos(){
+
+    const select =
+    document.getElementById(
+        "fileCourse"
+    );
+
+    const filtro =
+    document.getElementById(
+        "fileCourseFilter"
+    );
+
+
+    if(select){
+
+        select.innerHTML =
+        datos.cursos
+        .map(function(curso){
+
+            return (
+                '<option value="' +
+                curso.id +
+                '">' +
+                escapeHTML(curso.nombre) +
+                '</option>'
+            );
+
+        })
+        .join("");
+
+    }
+
+
+    if(filtro){
+
+        const valorActual =
+        filtro.value;
+
+        filtro.innerHTML =
+        '<option value="">Todos los cursos</option>'
+        +
+        datos.cursos
+        .map(function(curso){
+
+            return (
+                '<option value="' +
+                curso.id +
+                '">' +
+                escapeHTML(curso.nombre) +
+                '</option>'
+            );
+
+        })
+        .join("");
+
+        filtro.value =
+        valorActual;
+
+    }
+
+}
+
+const fileForm =
+document.getElementById(
+    "fileForm"
+);
+
+
+if(fileForm){
+
+    fileForm.addEventListener(
+        "submit",
+        async function(e){
+
+            e.preventDefault();
+
+
+            const input =
+            document.getElementById(
+                "fileInput"
+            );
+
+
+            if(
+                !input ||
+                input.files.length===0
+            ){
+
+                alert(
+                    "Selecciona un archivo."
+                );
+
+                return;
+
+            }
+
+
+            const archivo =
+            input.files[0];
+
+
+            const cursoId =
+            Number(
+                document
+                .getElementById("fileCourse")
+                .value
+            );
+
+
+            const descripcion =
+            document
+            .getElementById("fileDescription")
+            .value
+            .trim();
+
+
+            try{
+
+                const db =
+                fileDB ||
+                await abrirBaseArchivos();
+
+
+                const transaction =
+                db.transaction(
+                    FILE_STORE,
+                    "readwrite"
+                );
+
+
+                const store =
+                transaction.objectStore(
+                    FILE_STORE
+                );
+
+
+                store.add({
+
+                    id:Date.now(),
+
+                    cursoId:cursoId,
+
+                    nombre:archivo.name,
+
+                    tipo:archivo.type,
+
+                    tamano:archivo.size,
+
+                    fecha:new Date().toISOString(),
+
+                    descripcion:descripcion,
+
+                    archivo:archivo
+
+                });
+
+
+                transaction.oncomplete =
+                function(){
+
+                    fileForm.reset();
+
+                    cerrarModal(
+                        "fileModal"
+                    );
+
+                    mostrarArchivos();
+
+                };
+
+
+                transaction.onerror =
+                function(){
+
+                    alert(
+                        "No se pudo guardar el archivo."
+                    );
+
+                };
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    "No se pudo abrir el almacenamiento de archivos."
+                );
+
+            }
+
+        }
+    );
+
+}
+
+async function mostrarArchivos(){
+
+    const contenedor =
+    document.getElementById(
+        "filesGrid"
+    );
+
+
+    if(!contenedor){
+        return;
+    }
+
+
+    try{
+
+        const db =
+        fileDB ||
+        await abrirBaseArchivos();
+
+
+        const transaction =
+        db.transaction(
+            FILE_STORE,
+            "readonly"
+        );
+
+
+        const store =
+        transaction.objectStore(
+            FILE_STORE
+        );
+
+
+        const request =
+        store.getAll();
+
+
+        request.onsuccess =
+        function(){
+
+            let archivos =
+            request.result || [];
+
+
+            const texto =
+            (
+                document
+                .getElementById("fileSearch")
+                ?.value || ""
+            )
+            .trim()
+            .toLowerCase();
+
+
+            const cursoFiltro =
+            document
+            .getElementById(
+                "fileCourseFilter"
+            )
+            ?.value || "";
+
+
+            if(texto){
+
+                archivos =
+                archivos.filter(
+                    function(a){
+
+                        return (
+                            String(a.nombre)
+                            .toLowerCase()
+                            .includes(texto)
+                            ||
+                            String(
+                                a.descripcion || ""
+                            )
+                            .toLowerCase()
+                            .includes(texto)
+                        );
+
+                    }
+                );
+
+            }
+
+
+            if(cursoFiltro){
+
+                archivos =
+                archivos.filter(
+                    function(a){
+
+                        return (
+                            a.cursoId ===
+                            Number(cursoFiltro)
+                        );
+
+                    }
+                );
+
+            }
+
+
+            archivos.sort(
+                function(a,b){
+
+                    return (
+                        new Date(b.fecha)
+                        -
+                        new Date(a.fecha)
+                    );
+
+                }
+            );
+
+
+            if(
+                archivos.length===0
+            ){
+
+                contenedor.innerHTML = `
+
+                <div class="card empty">
+
+                    📂 Todavía no tienes archivos guardados.
+
+                </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            contenedor.innerHTML =
+            archivos
+            .map(
+                function(a){
+
+                    const curso =
+                    datos.cursos.find(
+                        function(c){
+
+                            return (
+                                c.id ===
+                                a.cursoId
+                            );
+
+                        }
+                    );
+
+
+                    return `
+
+                    <div class="file-card">
+
+                        <div class="file-icon">
+
+                            ${iconoArchivo(
+                                a.tipo,
+                                a.nombre
+                            )}
+
+                        </div>
+
+                        <h3>
+
+                            ${escapeHTML(
+                                a.nombre
+                            )}
+
+                        </h3>
+
+                        <p>
+
+                            ${
+                                escapeHTML(
+                                    a.descripcion
+                                    ||
+                                    "Sin descripción."
+                                )
+                            }
+
+                        </p>
+
+                        <div class="file-meta">
+
+                            📚 ${
+                                curso
+                                ?
+                                escapeHTML(
+                                    curso.nombre
+                                )
+                                :
+                                "Curso eliminado"
+                            }
+
+                            <br>
+
+                            📦 ${
+                                formatearTamano(
+                                    a.tamano
+                                )
+                            }
+
+                            <br>
+
+                            📅 ${
+                                formatearFechaArchivo(
+                                    a.fecha
+                                )
+                            }
+
+                        </div>
+
+                        <div class="file-actions">
+
+                            <button
+                            class="file-open"
+                            onclick="abrirArchivoGuardado(${a.id})">
+
+                                Abrir
+
+                            </button>
+
+                            <button
+                            class="file-delete"
+                            onclick="eliminarArchivo(${a.id})">
+
+                                🗑️
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+        };
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        contenedor.innerHTML = `
+
+        <div class="card empty">
+
+            No se pudieron cargar los archivos.
+
+        </div>
+
+        `;
+
+    }
+
+}
+
+async function abrirArchivoGuardado(id){
+
+    try{
+
+        const db =
+        fileDB ||
+        await abrirBaseArchivos();
+
+
+        const transaction =
+        db.transaction(
+            FILE_STORE,
+            "readonly"
+        );
+
+
+        const store =
+        transaction.objectStore(
+            FILE_STORE
+        );
+
+
+        const request =
+        store.get(id);
+
+
+        request.onsuccess =
+        function(){
+
+            const registro =
+            request.result;
+
+
+            if(
+                !registro ||
+                !registro.archivo
+            ){
+
+                alert(
+                    "No se encontró el archivo."
+                );
+
+                return;
+
+            }
+
+
+            const url =
+            URL.createObjectURL(
+                registro.archivo
+            );
+
+
+            window.open(
+                url,
+                "_blank"
+            );
+
+
+            setTimeout(
+                function(){
+
+                    URL.revokeObjectURL(
+                        url
+                    );
+
+                },
+                60000
+            );
+
+        };
+
+    }
+    catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+async function eliminarArchivo(id){
+
+    const confirmar =
+    confirm(
+        "¿Quieres eliminar este archivo?"
+    );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    try{
+
+        const db =
+        fileDB ||
+        await abrirBaseArchivos();
+
+
+        const transaction =
+        db.transaction(
+            FILE_STORE,
+            "readwrite"
+        );
+
+
+        const store =
+        transaction.objectStore(
+            FILE_STORE
+        );
+
+
+        store.delete(id);
+
+
+        transaction.oncomplete =
+        function(){
+
+            mostrarArchivos();
+
+        };
+
+    }
+    catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+function iconoArchivo(tipo,nombre){
+
+    const n =
+    String(nombre || "")
+    .toLowerCase();
+
+
+    if(
+        tipo &&
+        tipo.includes("pdf")
+    ){
+        return "📕";
+    }
+
+
+    if(
+        tipo &&
+        tipo.includes("image")
+    ){
+        return "🖼️";
+    }
+
+
+    if(
+        n.endsWith(".doc")
+        ||
+        n.endsWith(".docx")
+    ){
+        return "📘";
+    }
+
+
+    if(
+        n.endsWith(".xls")
+        ||
+        n.endsWith(".xlsx")
+    ){
+        return "📗";
+    }
+
+
+    if(
+        n.endsWith(".ppt")
+        ||
+        n.endsWith(".pptx")
+    ){
+        return "📙";
+    }
+
+
+    if(
+        n.endsWith(".zip")
+        ||
+        n.endsWith(".rar")
+    ){
+        return "🗜️";
+    }
+
+
+    return "📄";
+
+}
+
+
+function formatearTamano(bytes){
+
+    bytes =
+    Number(bytes || 0);
+
+
+    if(bytes < 1024){
+
+        return (
+            bytes +
+            " B"
+        );
+
+    }
+
+
+    if(
+        bytes <
+        1024 * 1024
+    ){
+
+        return (
+            (
+                bytes /
+                1024
+            )
+            .toFixed(1)
+            +
+            " KB"
+        );
+
+    }
+
+
+    return (
+        (
+            bytes /
+            1024 /
+            1024
+        )
+        .toFixed(1)
+        +
+        " MB"
+    );
+
+}
+
+
+function formatearFechaArchivo(fecha){
+
+    const d =
+    new Date(fecha);
+
+
+    if(
+        isNaN(
+            d.getTime()
+        )
+    ){
+
+        return "";
+
+    }
+
+
+    return d.toLocaleDateString(
+        "es-PE",
+        {
+            day:"2-digit",
+            month:"short",
+            year:"numeric"
+        }
+    );
+
+}
+
+
+function eliminarCurso(id){
+
+    const confirmar =
+    confirm(
+        "¿Seguro que quieres eliminar este curso?"
+    );
+
+
+    if(!confirmar){
+
+        return;
+
+    }
+
+
+    datos.cursos =
+    datos.cursos.filter(
+        function(curso){
+
+            return curso.id !== id;
+
+        }
+    );
+
+
+    guardar();
+
+}
+
+
+/* =====================================================
+   ABRIR NUEVA TAREA
+===================================================== */
+
+function abrirTarea(){
+
+    if(datos.cursos.length===0){
+
+        alert(
+            "Jimmy, primero agrega un curso 📚"
+        );
+
+        showPage(
+            "cursos"
+        );
+
+        return;
+
+    }
+
+
+    llenarSelectorCursos();
+
+
+    abrirModal(
+        "taskModal"
+    );
+
+}
+
+
+function llenarSelectorCursos(){
+
+    const select =
+    document.getElementById(
+        "taskCourse"
+    );
+
+
+    if(!select){
+
+        return;
+
+    }
+
+
+    select.innerHTML =
+    datos.cursos
+    .map(function(curso){
+
+        return (
+            '<option value="' +
+            curso.id +
+            '">' +
+            escapeHTML(curso.nombre) +
+            '</option>'
+        );
+
+    })
+    .join("");
+
+}
+
+
+/* =====================================================
+   GUARDAR TAREA
+===================================================== */
+
+const taskForm =
+document.getElementById(
+    "taskForm"
+);
+
+
+if(taskForm){
+
+    taskForm.addEventListener(
+        "submit",
+        function(e){
+
+            e.preventDefault();
+
+
+            const nombre =
+            document
+            .getElementById("taskName")
+            .value
+            .trim();
+
+
+            const cursoId =
+            Number(
+                document
+                .getElementById("taskCourse")
+                .value
+            );
+
+
+            const fecha =
+            document
+            .getElementById("taskDate")
+            .value;
+
+
+            const prioridad =
+            document
+            .getElementById("taskPriority")
+            .value;
+
+
+            const descripcion =
+            document
+            .getElementById("taskDescription")
+            .value
+            .trim();
+
+
+            if(!nombre){
+
+                alert(
+                    "Escribe el nombre de la tarea."
+                );
+
+                return;
+
+            }
+
+
+            if(!fecha){
+
+                alert(
+                    "Selecciona una fecha."
+                );
+
+                return;
+
+            }
+
+
+            datos.tareas.push({
+
+                id:Date.now(),
+
+                nombre:nombre,
+
+                cursoId:cursoId,
+
+                fecha:fecha,
+
+                prioridad:prioridad,
+
+                descripcion:descripcion,
+
+                completada:false
+
+            });
+
+
+            taskForm.reset();
+
+
+            cerrarModal(
+                "taskModal"
+            );
+
+
+            fechaSeleccionada =
+            fecha;
+
+
+            guardar();
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   COMPLETAR TAREA
+===================================================== */
+
+function completarTarea(id){
+
+    const tarea =
+    datos.tareas.find(
+        function(t){
+
+            return t.id === id;
+
+        }
+    );
+
+
+    if(!tarea){
+
+        return;
+
+    }
+
+
+    tarea.completada =
+    !tarea.completada;
+
+
+    guardar();
+
+}
+
+
+/* =====================================================
+   ELIMINAR TAREA
+===================================================== */
+
+function eliminarTarea(id){
+
+    const confirmar =
+    confirm(
+        "¿Quieres eliminar esta tarea?"
+    );
+
+
+    if(!confirmar){
+
+        return;
+
+    }
+
+
+    datos.tareas =
+    datos.tareas.filter(
+        function(tarea){
+
+            return tarea.id !== id;
+
+        }
+    );
+
+
+    guardar();
+
+}
+
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+function filtrar(tipo,boton){
+
+    filtroActual =
+    tipo;
+
+
+    document
+    .querySelectorAll(".filter")
+    .forEach(function(b){
+
+        b.classList.remove(
+            "active"
+        );
+
+    });
+
+
+    if(boton){
+
+        boton.classList.add(
+            "active"
+        );
+
+    }
+
+
+    mostrarTareas();
+
+}
+
+
+/* =====================================================
+   MOSTRAR CURSOS
+===================================================== */
+
+function mostrarCursos(){
+
+    const grid =
+    document.getElementById(
+        "courseGrid"
+    );
+
+
+    if(!grid){
+
+        return;
+
+    }
+
+
+    if(datos.cursos.length===0){
+
+        grid.innerHTML = `
+
+        <div class="card empty">
+
+            📚 Aún no tienes cursos.
+
+            <br><br>
+
+            Agrega tu primera materia.
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+    datos.cursos
+    .map(function(curso){
+
+        return `
+
+        <div
+        class="course"
+        style="--course:${curso.color}">
+
+            <div class="course-icon">
+
+                📘
+
+            </div>
+
+            <h3>
+
+                ${escapeHTML(
+                    curso.nombre
+                )}
+
+            </h3>
+
+            <p>
+
+                ${escapeHTML(
+                    curso.profesor ||
+                    "Sin profesor registrado"
+                )}
+
+            </p>
+
+            <button
+            class="small-btn"
+            onclick="eliminarCurso(${curso.id})">
+
+                🗑 Eliminar
+
+            </button>
+
+        </div>
+
+        `;
+
+    })
+    .join("");
+
+}
+
+
+/* =====================================================
+   MOSTRAR TAREAS
+===================================================== */
+
+function mostrarTareas(){
+
+    const lista =
+    document.getElementById(
+        "taskList"
+    );
+
+
+    if(!lista){
+
+        return;
+
+    }
+
+
+    let tareas =
+    datos.tareas.slice();
+
+
+    if(
+        filtroActual ===
+        "pendientes"
+    ){
+
+        tareas =
+        tareas.filter(
+            function(t){
+
+                return !t.completada;
+
+            }
+        );
+
+    }
+
+
+    if(
+        filtroActual ===
+        "completadas"
+    ){
+
+        tareas =
+        tareas.filter(
+            function(t){
+
+                return t.completada;
+
+            }
+        );
+
+    }
+
+
+    if(
+        filtroActual ===
+        "alta"
+    ){
+
+        tareas =
+        tareas.filter(
+            function(t){
+
+                return (
+                    t.prioridad ===
+                    "alta"
+                    &&
+                    !t.completada
+                );
+
+            }
+        );
+
+    }
+
+
+    tareas.sort(
+        function(a,b){
+
+            return (
+                a.fecha || ""
+            ).localeCompare(
+                b.fecha || ""
+            );
+
+        }
+    );
+
+
+    if(tareas.length===0){
+
+        lista.innerHTML = `
+
+        <div class="empty">
+
+            🎉 No hay tareas aquí.
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    lista.innerHTML =
+    tareas
+    .map(function(tarea){
+
+        return crearHTMLTarea(
+            tarea,
+            true
+        );
+
+    })
+    .join("");
+
+}
+
+
+/* =====================================================
+   CREAR HTML DE UNA TAREA
+===================================================== */
+
+function crearHTMLTarea(
+    tarea,
+    mostrarEliminar
+){
+
+    const curso =
+    datos.cursos.find(
+        function(c){
+
+            return (
+                c.id ===
+                tarea.cursoId
+            );
+
+        }
+    );
+
+
+    const nombreCurso =
+    curso
+    ?
+    curso.nombre
+    :
+    "Curso eliminado";
+
+
+    const descripcion =
+    tarea.descripcion
+    ?
+    " · " +
+    escapeHTML(
+        tarea.descripcion
+    )
+    :
+    "";
+
+
+    const botonEliminar =
+    mostrarEliminar
+    ?
+    `
+
+    <button
+    class="delete"
+    onclick="eliminarTarea(${tarea.id})">
+
+        🗑️
+
+    </button>
+
+    `
+    :
+    "";
+
+
+    return `
+
+    <div class="task">
+
+        <button
+        class="check ${tarea.completada ? "completed" : ""}"
+        onclick="completarTarea(${tarea.id})">
+
+            ${tarea.completada ? "✓" : ""}
+
+        </button>
+
+
+        <div
+        class="task-info ${tarea.completada ? "done" : ""}">
+
+            <strong>
+
+                ${escapeHTML(
+                    tarea.nombre
+                )}
+
+            </strong>
+
+            <small>
+
+                ${escapeHTML(
+                    nombreCurso
+                )}
+
+                ${descripcion}
+
+            </small>
+
+        </div>
+
+
+        <span
+        class="priority ${tarea.prioridad}">
+
+            ${capitalizar(
+                tarea.prioridad
+            )}
+
+        </span>
+
+
+        <span class="date">
+
+            ${formatearFecha(
+                tarea.fecha
+            )}
+
+        </span>
+
+
+        ${botonEliminar}
+
+    </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   INICIO / DASHBOARD
+===================================================== */
+
+function mostrarInicio(){
+
+    const pendientes =
+    datos.tareas.filter(
+        function(t){
+
+            return !t.completada;
+
+        }
+    );
+
+
+    const completadas =
+    datos.tareas.filter(
+        function(t){
+
+            return t.completada;
+
+        }
+    );
+
+
+    const urgentes =
+    pendientes.filter(
+        function(t){
+
+            return (
+                t.prioridad ===
+                "alta"
+            );
+
+        }
+    );
+
+
+    cambiarTexto(
+        "statCursos",
+        datos.cursos.length
+    );
+
+
+    cambiarTexto(
+        "statPendientes",
+        pendientes.length
+    );
+
+
+    cambiarTexto(
+        "statUrgentes",
+        urgentes.length
+    );
+
+
+    cambiarTexto(
+        "statCompletadas",
+        completadas.length
+    );
+
+
+    /* PRÓXIMAS TAREAS */
+
+    const proximas =
+    pendientes
+    .slice()
+    .sort(
+        function(a,b){
+
+            return (
+                a.fecha || ""
+            ).localeCompare(
+                b.fecha || ""
+            );
+
+        }
+    )
+    .slice(0,5);
+
+
+    const homeTasks =
+    document.getElementById(
+        "homeTasks"
+    );
+
+
+    if(homeTasks){
+
+        if(proximas.length===0){
+
+            homeTasks.innerHTML = `
+
+            <div class="empty">
+
+                🎉 ¡Excelente, Jimmy!
+
+                <br>
+
+                No tienes tareas pendientes.
+
+            </div>
+
+            `;
+
+        }
+        else{
+
+            homeTasks.innerHTML =
+            proximas
+            .map(function(tarea){
+
+                return crearHTMLTarea(
+                    tarea,
+                    false
+                );
+
+            })
+            .join("");
+
+        }
+
+    }
+
+
+    /* CURSOS */
+
+    const homeCourses =
+    document.getElementById(
+        "homeCourses"
+    );
+
+
+    if(homeCourses){
+
+        if(datos.cursos.length===0){
+
+            homeCourses.innerHTML = `
+
+            <div class="empty">
+
+                📚 Agrega tu primer curso.
+
+            </div>
+
+            `;
+
+        }
+        else{
+
+            homeCourses.innerHTML =
+            datos.cursos
+            .slice(0,5)
+            .map(function(curso){
+
+                return `
+
+                <div class="task">
+
+                    <div
+                    style="
+                    width:12px;
+                    height:12px;
+                    border-radius:50%;
+                    flex:none;
+                    background:${curso.color};
+                    ">
+                    </div>
+
+                    <div class="task-info">
+
+                        <strong>
+
+                            ${escapeHTML(
+                                curso.nombre
+                            )}
+
+                        </strong>
+
+                        <small>
+
+                            ${escapeHTML(
+                                curso.profesor ||
+                                "Sin profesor"
+                            )}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                `;
+
+            })
+            .join("");
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   ASISTENTE PERSONAL
+===================================================== */
+
+function actualizarAsistente(){
+
+    const hora =
+    new Date().getHours();
+
+
+    let saludo;
+
+
+    if(
+        hora >= 5 &&
+        hora < 12
+    ){
+
+        saludo =
+        "Buenos días, " +
+        NOMBRE_USUARIO +
+        " ☀️";
+
+    }
+    else if(
+        hora >= 12 &&
+        hora < 19
+    ){
+
+        saludo =
+        "Buenas tardes, " +
+        NOMBRE_USUARIO +
+        " 🌤️";
+
+    }
+    else{
+
+        saludo =
+        "Buenas noches, " +
+        NOMBRE_USUARIO +
+        " 🌙";
+
+    }
+
+
+    cambiarTexto(
+        "saludo",
+        saludo
+    );
+
+
+    const pendientes =
+    datos.tareas.filter(
+        function(t){
+
+            return !t.completada;
+
+        }
+    );
+
+
+    const urgentes =
+    pendientes.filter(
+        function(t){
+
+            return (
+                t.prioridad ===
+                "alta"
+            );
+
+        }
+    );
+
+
+    let mensaje;
+
+
+    if(pendientes.length===0){
+
+        mensaje =
+        "Todo listo por hoy. No tienes tareas pendientes. 🎉";
+
+    }
+    else if(urgentes.length>0){
+
+        mensaje =
+        "Tienes " +
+        pendientes.length +
+        (
+            pendientes.length===1
+            ?
+            " tarea pendiente. "
+            :
+            " tareas pendientes. "
+        )
+        +
+        "De ellas, " +
+        urgentes.length +
+        (
+            urgentes.length===1
+            ?
+            " es urgente. "
+            :
+            " son urgentes. "
+        )
+        +
+        "Vamos primero por lo más importante. 🔥";
+
+    }
+    else{
+
+        mensaje =
+        "Tienes " +
+        pendientes.length +
+        (
+            pendientes.length===1
+            ?
+            " tarea pendiente. "
+            :
+            " tareas pendientes. "
+        )
+        +
+        "Todo está bajo control. Vamos avanzando poco a poco. 💪";
+
+    }
+
+
+    cambiarTexto(
+        "mensajeAsistente",
+        mensaje
+    );
+
+}
+
+
+/* =====================================================
+   VOZ MÁS FLUIDA
+===================================================== */
+
+function hablar(){
+
+    if(
+        !(
+            "speechSynthesis"
+            in window
+        )
+    ){
+
+        alert(
+            "Tu navegador no permite usar voz."
+        );
+
+        return;
+
+    }
+
+
+    window.speechSynthesis.cancel();
+
+
+    const pendientes =
+    datos.tareas.filter(
+        function(t){
+
+            return !t.completada;
+
+        }
+    );
+
+
+    const urgentes =
+    pendientes.filter(
+        function(t){
+
+            return (
+                t.prioridad ===
+                "alta"
+            );
+
+        }
+    );
+
+
+    const hora =
+    new Date().getHours();
+
+
+    const frases=[];
+
+
+    if(
+        hora >= 5 &&
+        hora < 12
+    ){
+
+        frases.push(
+            "Buenos días, " +
+            NOMBRE_USUARIO + "."
+        );
+
+    }
+    else if(
+        hora >= 12 &&
+        hora < 19
+    ){
+
+        frases.push(
+            "Buenas tardes, " +
+            NOMBRE_USUARIO + "."
+        );
+
+    }
+    else{
+
+        frases.push(
+            "Buenas noches, " +
+            NOMBRE_USUARIO + "."
+        );
+
+    }
+
+
+    frases.push(
+        "Bienvenido a Uni Organiza."
+    );
+
+
+    if(pendientes.length===0){
+
+        frases.push(
+            "No tienes tareas pendientes."
+        );
+
+        frases.push(
+            "Buen trabajo."
+        );
+
+    }
+    else{
+
+        if(pendientes.length===1){
+
+            frases.push(
+                "Tienes una tarea pendiente."
+            );
+
+        }
+        else{
+
+            frases.push(
+                "Tienes " +
+                pendientes.length +
+                " tareas pendientes."
+            );
+
+        }
+
+
+        if(urgentes.length===1){
+
+            frases.push(
+                "Una de ellas es urgente."
+            );
+
+            frases.push(
+                "Te recomiendo empezar por esa."
+            );
+
+        }
+        else if(
+            urgentes.length>1
+        ){
+
+            frases.push(
+                urgentes.length +
+                " de ellas son urgentes."
+            );
+
+            frases.push(
+                "Te recomiendo empezar por esas."
+            );
+
+        }
+        else{
+
+            frases.push(
+                "Todo está bajo control."
+            );
+
+        }
+
+    }
+
+
+    const voces =
+    window.speechSynthesis
+    .getVoices();
+
+
+    let vozPreferida=null;
+
+
+    for(
+        let i=0;
+        i<voces.length;
+        i++
+    ){
+
+        const idioma =
+        voces[i].lang
+        .toLowerCase();
+
+
+        const nombre =
+        voces[i].name
+        .toLowerCase();
+
+
+        if(
+            idioma.indexOf("es")===0
+            &&
+            (
+                nombre.includes("natural")
+                ||
+                nombre.includes("microsoft")
+                ||
+                nombre.includes("google")
+            )
+        ){
+
+            vozPreferida =
+            voces[i];
+
+            break;
+
+        }
+
+    }
+
+
+    if(!vozPreferida){
+
+        vozPreferida =
+        voces.find(
+            function(v){
+
+                return (
+                    v.lang
+                    .toLowerCase()
+                    .indexOf("es")===0
+                );
+
+            }
+        );
+
+    }
+
+
+    let indice=0;
+
+
+    function decirSiguiente(){
+
+        if(
+            indice >=
+            frases.length
+        ){
+
+            return;
+
+        }
+
+
+        const mensaje =
+        new SpeechSynthesisUtterance(
+            frases[indice]
+        );
+
+
+        if(vozPreferida){
+
+            mensaje.voice =
+            vozPreferida;
+
+            mensaje.lang =
+            vozPreferida.lang;
+
+        }
+        else{
+
+            mensaje.lang =
+            "es-PE";
+
+        }
+
+
+        mensaje.rate=0.94;
+
+        mensaje.pitch=1;
+
+        mensaje.volume=1;
+
+
+        mensaje.onend =
+        function(){
+
+            indice++;
+
+            setTimeout(
+                decirSiguiente,
+                180
+            );
+
+        };
+
+
+        window
+        .speechSynthesis
+        .speak(
+            mensaje
+        );
+
+    }
+
+
+    decirSiguiente();
+
+}
+
+
+/* =====================================================
+   BUSCADOR
+===================================================== */
+
+function buscar(texto){
+
+    const caja =
+    document.getElementById(
+        "searchResults"
+    );
+
+
+    if(!caja){
+
+        return;
+
+    }
+
+
+    texto =
+    String(texto)
+    .trim()
+    .toLowerCase();
+
+
+    if(texto.length<2){
+
+        caja.classList.remove(
+            "show"
+        );
+
+        return;
+
+    }
+
+
+    const resultados=[];
+
+
+    datos.cursos.forEach(
+        function(curso){
+
+            const nombre =
+            String(
+                curso.nombre || ""
+            ).toLowerCase();
+
+
+            const profesor =
+            String(
+                curso.profesor || ""
+            ).toLowerCase();
+
+
+            if(
+                nombre.includes(texto)
+                ||
+                profesor.includes(texto)
+            ){
+
+                resultados.push({
+
+                    tipo:"📚 Curso",
+
+                    titulo:curso.nombre,
+
+                    detalle:
+                    curso.profesor ||
+                    "Sin profesor",
+
+                    pagina:"cursos"
+
+                });
+
+            }
+
+        }
+    );
+
+
+    datos.tareas.forEach(
+        function(tarea){
+
+            const nombre =
+            String(
+                tarea.nombre || ""
+            ).toLowerCase();
+
+
+            const descripcion =
+            String(
+                tarea.descripcion || ""
+            ).toLowerCase();
+
+
+            if(
+                nombre.includes(texto)
+                ||
+                descripcion.includes(texto)
+            ){
+
+                resultados.push({
+
+                    tipo:"📝 Tarea",
+
+                    titulo:tarea.nombre,
+
+                    detalle:
+                    formatearFecha(
+                        tarea.fecha
+                    ),
+
+                    pagina:"tareas"
+
+                });
+
+            }
+
+        }
+    );
+
+
+    if(resultados.length===0){
+
+        caja.innerHTML = `
+
+        <div class="empty">
+
+            No encontré resultados.
+
+        </div>
+
+        `;
+
+    }
+    else{
+
+        caja.innerHTML =
+        resultados
+        .slice(0,10)
+        .map(function(resultado){
+
+            return `
+
+            <div
+            class="result"
+            onclick="abrirResultado('${resultado.pagina}')">
+
+                <strong>
+
+                    ${resultado.tipo}
+
+                    ·
+
+                    ${escapeHTML(
+                        resultado.titulo
+                    )}
+
+                </strong>
+
+                <small>
+
+                    ${escapeHTML(
+                        resultado.detalle
+                    )}
+
+                </small>
+
+            </div>
+
+            `;
+
+        })
+        .join("");
+
+    }
+
+
+    caja.classList.add(
+        "show"
+    );
+
+}
+
+
+function abrirResultado(
+    pagina
+){
+
+    showPage(
+        pagina
+    );
+
+
+    const input =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+    if(input){
+
+        input.value="";
+
+    }
+
+
+    const caja =
+    document.getElementById(
+        "searchResults"
+    );
+
+
+    if(caja){
+
+        caja.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   MODO OSCURO
+===================================================== */
+
+function toggleTheme(){
+
+    if(
+        datos.tema ===
+        "oscuro"
+    ){
+
+        datos.tema =
+        "claro";
+
+    }
+    else{
+
+        datos.tema =
+        "oscuro";
+
+    }
+
+
+    guardar();
+
+}
+
+
+function aplicarTema(){
+
+    const oscuro =
+    datos.tema ===
+    "oscuro";
+
+
+    document.body.classList.toggle(
+        "dark",
+        oscuro
+    );
+
+
+    const boton =
+    document.getElementById(
+        "themeButton"
+    );
+
+
+    if(boton){
+
+        boton.textContent =
+        oscuro
+        ?
+        "☀️"
+        :
+        "🌙";
+
+    }
+
+}
+
+
+/* =====================================================
+   CALENDARIO
+===================================================== */
+
+function renderCalendario(){
+
+    const grid =
+    document.getElementById(
+        "calendarGrid"
+    );
+
+
+    if(!grid){
+
+        return;
+
+    }
+
+
+    const año =
+    fechaCalendario.getFullYear();
+
+
+    const mes =
+    fechaCalendario.getMonth();
+
+
+    const titulo =
+    new Date(
+        año,
+        mes,
+        1
+    )
+    .toLocaleDateString(
+        "es-PE",
+        {
+            month:"long",
+            year:"numeric"
+        }
+    );
+
+
+    cambiarTexto(
+        "calendarTitle",
+        capitalizar(titulo)
+    );
+
+
+    const primerDia =
+    new Date(
+        año,
+        mes,
+        1
+    );
+
+
+    let inicio =
+    primerDia.getDay();
+
+
+    /* LUNES = 0 */
+
+    inicio =
+    inicio===0
+    ?
+    6
+    :
+    inicio-1;
+
+
+    const diasMes =
+    new Date(
+        año,
+        mes+1,
+        0
+    ).getDate();
+
+
+    const diasAnterior =
+    new Date(
+        año,
+        mes,
+        0
+    ).getDate();
+
+
+    const hoy =
+    new Date();
+
+
+    let html="";
+
+
+    for(
+        let casilla=0;
+        casilla<42;
+        casilla++
+    ){
+
+        let dia;
+
+        let mesCelda=mes;
+
+        let añoCelda=año;
+
+        let otroMes=false;
+
+
+        if(casilla<inicio){
+
+            dia =
+            diasAnterior
+            -
+            inicio
+            +
+            casilla
+            +
+            1;
+
+
+            mesCelda =
+            mes-1;
+
+
+            otroMes=true;
+
+        }
+        else if(
+            casilla >=
+            inicio+diasMes
+        ){
+
+            dia =
+            casilla
+            -
+            inicio
+            -
+            diasMes
+            +
+            1;
+
+
+            mesCelda =
+            mes+1;
+
+
+            otroMes=true;
+
+        }
+        else{
+
+            dia =
+            casilla
+            -
+            inicio
+            +
+            1;
+
+        }
+
+
+        if(mesCelda<0){
+
+            mesCelda=11;
+
+            añoCelda--;
+
+        }
+
+
+        if(mesCelda>11){
+
+            mesCelda=0;
+
+            añoCelda++;
+
+        }
+
+
+        const fecha =
+        añoCelda
+        +
+        "-"
+        +
+        String(
+            mesCelda+1
+        ).padStart(
+            2,
+            "0"
+        )
+        +
+        "-"
+        +
+        String(
+            dia
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+        const tareasDia =
+        datos.tareas.filter(
+            function(tarea){
+
+                return (
+                    tarea.fecha ===
+                    fecha
+                );
+
+            }
+        );
+
+
+        const esHoy =
+        hoy.getFullYear() ===
+        añoCelda
+        &&
+        hoy.getMonth() ===
+        mesCelda
+        &&
+        hoy.getDate() ===
+        dia;
+
+
+        const seleccionada =
+        fechaSeleccionada ===
+        fecha;
+
+
+        html += `
+
+        <div
+        class="calendar-day
+        ${otroMes ? "other-month" : ""}
+        ${esHoy ? "today" : ""}
+        ${seleccionada ? "selected" : ""}"
+        onclick="seleccionarDia('${fecha}')">
+
+            <div class="calendar-number">
+
+                ${dia}
+
+            </div>
+
+            ${crearEventosCalendario(
+                tareasDia
+            )}
+
+        </div>
+
+        `;
+
+    }
+
+
+    grid.innerHTML =
+    html;
+
+}
+
+
+/* =====================================================
+   EVENTOS DEL CALENDARIO
+===================================================== */
+
+function crearEventosCalendario(
+    tareas
+){
+
+    if(
+        tareas.length===0
+    ){
+
+        return "";
+
+    }
+
+
+    const visibles =
+    tareas.slice(
+        0,
+        3
+    );
+
+
+    let html =
+    visibles
+    .map(function(tarea){
+
+        let clase="";
+
+
+        if(tarea.completada){
+
+            clase =
+            "completed";
+
+        }
+        else if(
+            tarea.prioridad ===
+            "alta"
+        ){
+
+            clase =
+            "high";
+
+        }
+
+
+        return `
+
+        <div
+        class="calendar-event ${clase}">
+
+            ${escapeHTML(
+                tarea.nombre
+            )}
+
+        </div>
+
+        `;
+
+    })
+    .join("");
+
+
+    if(tareas.length>3){
+
+        html += `
+
+        <div class="calendar-more">
+
+            +${tareas.length-3}
+            más
+
+        </div>
+
+        `;
+
+    }
+
+
+    return html;
+
+}
+
+
+/* =====================================================
+   SELECCIONAR DÍA
+===================================================== */
+
+function seleccionarDia(
+    fecha
+){
+
+    fechaSeleccionada =
+    fecha;
+
+
+    renderCalendario();
+
+
+    mostrarTareasDelDia(
+        fecha
+    );
+
+}
+
+
+/* =====================================================
+   TAREAS DEL DÍA
+===================================================== */
+
+function mostrarTareasDelDia(
+    fecha
+){
+
+    const contenedor =
+    document.getElementById(
+        "dayTasks"
+    );
+
+
+    const textoFecha =
+    document.getElementById(
+        "selectedDateText"
+    );
+
+
+    if(
+        !contenedor ||
+        !textoFecha
+    ){
+
+        return;
+
+    }
+
+
+    const objetoFecha =
+    new Date(
+        fecha +
+        "T00:00:00"
+    );
+
+
+    const fechaBonita =
+    objetoFecha.toLocaleDateString(
+        "es-PE",
+        {
+            weekday:"long",
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+        }
+    );
+
+
+    textoFecha.textContent =
+    capitalizar(
+        fechaBonita
+    );
+
+
+    const tareasDia =
+    datos.tareas
+    .filter(
+        function(tarea){
+
+            return (
+                tarea.fecha ===
+                fecha
+            );
+
+        }
+    )
+    .sort(
+        function(a,b){
+
+            const prioridad = {
+                alta:1,
+                media:2,
+                baja:3
+            };
+
+
+            return (
+                prioridad[a.prioridad] || 4
+            )
+            -
+            (
+                prioridad[b.prioridad] || 4
+            );
+
+        }
+    );
+
+
+    if(tareasDia.length===0){
+
+        contenedor.innerHTML = `
+
+        <div class="empty">
+
+            📭 No tienes actividades
+            para este día.
+
+            <br><br>
+
+            <button
+            class="btn"
+            onclick="crearTareaEnFecha('${fecha}')">
+
+                + Crear tarea aquí
+
+            </button>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    contenedor.innerHTML =
+    tareasDia
+    .map(function(tarea){
+
+        return crearHTMLTarea(
+            tarea,
+            true
+        );
+
+    })
+    .join("")
+    +
+    `
+
+    <div
+    style="
+    margin-top:16px;
+    text-align:center;
+    ">
+
+        <button
+        class="btn"
+        onclick="crearTareaEnFecha('${fecha}')">
+
+            + Agregar otra tarea
+
+        </button>
+
+    </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   CAMBIAR MES
+===================================================== */
+
+function cambiarMes(
+    cantidad
+){
+
+    fechaCalendario =
+    new Date(
+
+        fechaCalendario.getFullYear(),
+
+        fechaCalendario.getMonth()
+        +
+        cantidad,
+
+        1
+
+    );
+
+
+    renderCalendario();
+
+}
+
+
+/* =====================================================
+   IR A HOY
+===================================================== */
+
+function irAHoy(){
+
+    fechaCalendario =
+    new Date();
+
+
+    fechaSeleccionada =
+    fechaLocalISO(
+        new Date()
+    );
+
+
+    renderCalendario();
+
+
+    mostrarTareasDelDia(
+        fechaSeleccionada
+    );
+
+}
+
+
+/* =====================================================
+   TAREA DESDE CALENDARIO
+===================================================== */
+
+function crearTareaDesdeCalendario(){
+
+    crearTareaEnFecha(
+        fechaSeleccionada
+        ||
+        fechaLocalISO(
+            new Date()
+        )
+    );
+
+}
+
+
+function crearTareaEnFecha(
+    fecha
+){
+
+    if(datos.cursos.length===0){
+
+        alert(
+            "Jimmy, primero necesitas agregar un curso 📚"
+        );
+
+
+        showPage(
+            "cursos"
+        );
+
+        return;
+
+    }
+
+
+    llenarSelectorCursos();
+
+
+    const fechaInput =
+    document.getElementById(
+        "taskDate"
+    );
+
+
+    if(fechaInput){
+
+        fechaInput.value =
+        fecha;
+
+    }
+
+
+    abrirModal(
+        "taskModal"
+    );
+
+}
+
+
+/* =====================================================
+   FUNCIONES AUXILIARES
+===================================================== */
+
+function fechaLocalISO(
+    fecha
+){
+
+    const año =
+    fecha.getFullYear();
+
+
+    const mes =
+    String(
+        fecha.getMonth()+1
+    ).padStart(
+        2,
+        "0"
+    );
+
+
+    const dia =
+    String(
+        fecha.getDate()
+    ).padStart(
+        2,
+        "0"
+    );
+
+
+    return (
+        año +
+        "-" +
+        mes +
+        "-" +
+        dia
+    );
+
+}
+
+
+function formatearFecha(
+    fecha
+){
+
+    if(!fecha){
+
+        return "";
+
+    }
+
+
+    const d =
+    new Date(
+        fecha +
+        "T00:00:00"
+    );
+
+
+    return d.toLocaleDateString(
+        "es-PE",
+        {
+            day:"2-digit",
+            month:"short"
+        }
+    );
+
+}
+
+
+function capitalizar(
+    texto
+){
+
+    texto =
+    String(
+        texto || ""
+    );
+
+
+    if(!texto){
+
+        return "";
+
+    }
+
+
+    return (
+        texto
+        .charAt(0)
+        .toUpperCase()
+        +
+        texto.slice(1)
+    );
+
+}
+
+
+function escapeHTML(
+    texto
+){
+
+    return String(
+        texto || ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+function cambiarTexto(
+    id,
+    texto
+){
+
+    const elemento =
+    document.getElementById(id);
+
+
+    if(elemento){
+
+        elemento.textContent =
+        texto;
+
+    }
+
+}
+
+/* =====================================================
+   NOTAS - PARTE 3
+===================================================== */
+
+function abrirNota(){
+
+    if(datos.cursos.length===0){
+
+        alert(
+            "Jimmy, primero necesitas agregar un curso 📚"
+        );
+
+        showPage("cursos");
+
+        return;
+
+    }
+
+    const select =
+    document.getElementById(
+        "gradeCourse"
+    );
+
+    if(!select){
+        return;
+    }
+
+    select.innerHTML =
+    datos.cursos
+    .map(function(curso){
+
+        return (
+            '<option value="' +
+            curso.id +
+            '">' +
+            escapeHTML(curso.nombre) +
+            '</option>'
+        );
+
+    })
+    .join("");
+
+
+    abrirModal(
+        "gradeModal"
+    );
+
+}
+
+
+/* =========================
+   GUARDAR NOTA
+========================= */
+
+const gradeForm =
+document.getElementById(
+    "gradeForm"
+);
+
+
+if(gradeForm){
+
+    gradeForm.addEventListener(
+        "submit",
+        function(e){
+
+            e.preventDefault();
+
+
+            const cursoId =
+            Number(
+                document
+                .getElementById("gradeCourse")
+                .value
+            );
+
+
+            const nombre =
+            document
+            .getElementById("gradeName")
+            .value
+            .trim();
+
+
+            const nota =
+            Number(
+                document
+                .getElementById("gradeValue")
+                .value
+            );
+
+
+            const peso =
+            Number(
+                document
+                .getElementById("gradeWeight")
+                .value
+            );
+
+
+            if(
+                !nombre
+            ){
+
+                alert(
+                    "Escribe el nombre de la evaluación."
+                );
+
+                return;
+
+            }
+
+
+            if(
+                isNaN(nota)
+                ||
+                nota<0
+                ||
+                nota>20
+            ){
+
+                alert(
+                    "La nota debe estar entre 0 y 20."
+                );
+
+                return;
+
+            }
+
+
+            if(
+                isNaN(peso)
+                ||
+                peso<0
+                ||
+                peso>100
+            ){
+
+                alert(
+                    "El peso debe estar entre 0 y 100."
+                );
+
+                return;
+
+            }
+
+
+            datos.notas.push({
+
+                id:Date.now(),
+
+                cursoId:cursoId,
+
+                nombre:nombre,
+
+                nota:nota,
+
+                peso:peso
+
+            });
+
+
+            gradeForm.reset();
+
+
+            document
+            .getElementById(
+                "gradeWeight"
+            )
+            .value=0;
+
+
+            cerrarModal(
+                "gradeModal"
+            );
+
+
+            guardar();
+
+        }
+    );
+
+}
+
+
+/* =========================
+   ELIMINAR NOTA
+========================= */
+
+function eliminarNota(id){
+
+    const confirmar =
+    confirm(
+        "¿Quieres eliminar esta nota?"
+    );
+
+
+    if(!confirmar){
+
+        return;
+
+    }
+
+
+    datos.notas =
+    datos.notas.filter(
+        function(nota){
+
+            return nota.id !== id;
+
+        }
+    );
+
+
+    guardar();
+
+}
+
+
+/* =========================
+   PROMEDIO DE CURSO
+========================= */
+
+function calcularPromedioCurso(
+    notas
+){
+
+    if(
+        !notas ||
+        notas.length===0
+    ){
+
+        return null;
+
+    }
+
+
+    const notasConPeso =
+    notas.filter(
+        function(n){
+
+            return (
+                Number(n.peso)>0
+            );
+
+        }
+    );
+
+
+    /*
+    Si hay pesos, usamos promedio ponderado.
+    */
+
+    if(
+        notasConPeso.length>0
+    ){
+
+        let suma=0;
+
+        let totalPeso=0;
+
+
+        notasConPeso.forEach(
+            function(n){
+
+                suma +=
+                Number(n.nota)
+                *
+                Number(n.peso);
+
+
+                totalPeso +=
+                Number(n.peso);
+
+            }
+        );
+
+
+        if(totalPeso===0){
+
+            return null;
+
+        }
+
+
+        return (
+            suma /
+            totalPeso
+        );
+
+    }
+
+
+    /*
+    Si no hay pesos,
+    calculamos promedio simple.
+    */
+
+    let total=0;
+
+
+    notas.forEach(
+        function(n){
+
+            total +=
+            Number(n.nota);
+
+        }
+    );
+
+
+    return (
+        total /
+        notas.length
+    );
+
+}
+
+
+/* =========================
+   MOSTRAR NOTAS
+========================= */
+
+function mostrarNotas(){
+
+    const contenedor =
+    document.getElementById(
+        "gradesByCourse"
+    );
+
+
+    if(!contenedor){
+
+        return;
+
+    }
+
+
+    let cursosConNotas=0;
+
+    let promedios=[];
+
+
+    let html="";
+
+
+    datos.cursos.forEach(
+        function(curso){
+
+            const notasCurso =
+            datos.notas.filter(
+                function(nota){
+
+                    return (
+                        nota.cursoId ===
+                        curso.id
+                    );
+
+                }
+            );
+
+
+            if(
+                notasCurso.length===0
+            ){
+
+                return;
+
+            }
+
+
+            cursosConNotas++;
+
+
+            const promedio =
+            calcularPromedioCurso(
+                notasCurso
+            );
+
+
+            if(
+                promedio !== null
+            ){
+
+                promedios.push(
+                    promedio
+                );
+
+            }
+
+
+            const promedioTexto =
+            promedio===null
+            ?
+            "--"
+            :
+            promedio.toFixed(2);
+
+
+            html += `
+
+            <div class="grade-course-card">
+
+                <div class="grade-course-head">
+
+                    <div class="grade-course-title">
+
+                        <span
+                        class="grade-color"
+                        style="background:${curso.color}">
+                        </span>
+
+                        <h3>
+
+                            ${escapeHTML(
+                                curso.nombre
+                            )}
+
+                        </h3>
+
+                    </div>
+
+
+                    <div class="course-average">
+
+                        Promedio:
+                        ${promedioTexto}
+
+                    </div>
+
+                </div>
+
+
+                ${crearListaNotas(
+                    notasCurso
+                )}
+
+            </div>
+
+            `;
+
+        }
+    );
+
+
+    if(
+        html===""
+    ){
+
+        contenedor.innerHTML = `
+
+        <div class="card empty">
+
+            📊 Todavía no tienes notas registradas.
+
+            <br><br>
+
+            Usa el botón
+            <b>+ Agregar nota</b>
+            para comenzar.
+
+        </div>
+
+        `;
+
+    }
+    else{
+
+        contenedor.innerHTML =
+        html;
+
+    }
+
+
+    const totalNotas =
+    datos.notas.length;
+
+
+    cambiarTexto(
+        "totalNotas",
+        totalNotas
+    );
+
+
+    cambiarTexto(
+        "cursosConNotas",
+        cursosConNotas
+    );
+
+
+    if(
+        promedios.length===0
+    ){
+
+        cambiarTexto(
+            "promedioGeneral",
+            "--"
+        );
+
+    }
+    else{
+
+        let sumaPromedios=0;
+
+
+        promedios.forEach(
+            function(p){
+
+                sumaPromedios+=p;
+
+            }
+        );
+
+
+        const promedioGeneral =
+        sumaPromedios /
+        promedios.length;
+
+
+        cambiarTexto(
+            "promedioGeneral",
+            promedioGeneral.toFixed(2)
+        );
+
+    }
+
+}
+
+
+/* =========================
+   LISTA DE NOTAS
+========================= */
+
+function crearListaNotas(
+    notas
+){
+
+    if(
+        notas.length===0
+    ){
+
+        return `
+
+        <div class="grade-empty">
+
+            Sin notas.
+
+        </div>
+
+        `;
+
+    }
+
+
+    return notas
+    .map(
+        function(nota){
+
+            const pesoTexto =
+            Number(nota.peso)>0
+            ?
+            nota.peso+"%"
+            :
+            "sin peso";
+
+
+            return `
+
+            <div class="grade-row">
+
+                <div>
+
+                    <strong>
+
+                        ${escapeHTML(
+                            nota.nombre
+                        )}
+
+                    </strong>
+
+                    <small>
+
+                        Evaluación
+
+                    </small>
+
+                </div>
+
+
+                <div class="grade-value">
+
+                    ${Number(
+                        nota.nota
+                    ).toFixed(1)}
+
+                </div>
+
+
+                <div class="grade-weight">
+
+                    ${pesoTexto}
+
+                </div>
+
+
+                <button
+                class="grade-delete"
+                onclick="eliminarNota(${nota.id})">
+
+                    🗑️
+
+                </button>
+
+            </div>
+
+            `;
+
+        }
+    )
+    .join("");
+
+}
+
+/* =====================================================
+   PRÓXIMAMENTE
+===================================================== */
+
+function proximamente(
+    nombre
+){
+
+    alert(
+        nombre +
+        " llegará en una próxima parte de UniOrganiza 🚀"
+    );
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR APP
+===================================================== */
+
+function actualizar(){
+
+    mostrarInicio();
+
+    mostrarCursos();
+
+    mostrarTareas();
+
+    actualizarAsistente();
+
+    aplicarTema();
+
+    renderCalendario();
+
+
+    if(
+        document.getElementById(
+            "dayTasks"
+        )
+    ){
+
+        mostrarTareasDelDia(
+            fechaSeleccionada
+        );
+
+    }
+
+    mostrarNotas();
+
+}
+
+
+/* =====================================================
+   INICIAR
+===================================================== */
+
+console.log(
+    "✅ UniOrganiza cargó correctamente"
+);
+
+abrirBaseArchivos()
+.then(function(){
+
+    mostrarArchivos();
+
+})
+.catch(function(error){
+
+    console.error(
+        "Error al iniciar archivos:",
+        error
+    );
+
+});
+
+actualizar();
+comprobarSesion();
 function iniciarSincronizacion(
     usuario
 ){
@@ -148,3 +7613,8 @@ function iniciarSincronizacion(
     );
 
 }
+
+</script>
+
+</body>
+</html>
