@@ -1465,13 +1465,14 @@ textarea:focus{
         <form id="loginForm">
 
             <label>
-                Usuario
+                Correo electrónico
 
                 <input
-                id="loginUser"
-                type="text"
-                placeholder="Escribe tu usuario"
-                required>
+id="loginUser"
+type="email"
+placeholder="tu@correo.com"
+autocomplete="email"
+required>
             </label>
 
             <label>
@@ -2724,6 +2725,9 @@ id="fileModal">
     </div>
 
 </div>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
 
 <script>
 
@@ -2733,9 +2737,20 @@ id="fileModal">
 
 const NOMBRE_USUARIO = "Jimmy";
 const STORAGE = "UniOrganiza2";
-const LOGIN_USUARIO = "Jimmy";
-const LOGIN_PASSWORD = "1234";
-const LOGIN_STORAGE = "UniOrganizaLogin";
+
+const firebaseConfig = {
+    apiKey: "PEGA_AQUI_TU_API_KEY",
+    authDomain: "uniorganiza-992b9.firebaseapp.com",
+    projectId: "uniorganiza-992b9",
+    storageBucket: "uniorganiza-992b9.firebasestorage.app",
+    messagingSenderId: "766838365172",
+    appId: "PEGA_AQUI_TU_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
 
 let datos;
 
@@ -2851,7 +2866,7 @@ if(loginForm){
 
             e.preventDefault();
 
-            const usuario =
+            const correo =
             document
             .getElementById("loginUser")
             .value
@@ -2867,16 +2882,17 @@ if(loginForm){
                 "loginMessage"
             );
 
-            if(
-                usuario === LOGIN_USUARIO
-                &&
-                password === LOGIN_PASSWORD
-            ){
+            if(mensaje){
+                mensaje.textContent =
+                "Ingresando...";
+            }
 
-                localStorage.setItem(
-                    LOGIN_STORAGE,
-                    "activo"
-                );
+            auth
+            .signInWithEmailAndPassword(
+                correo,
+                password
+            )
+            .then(function(){
 
                 if(mensaje){
                     mensaje.textContent="";
@@ -2886,17 +2902,53 @@ if(loginForm){
 
                 hablarBienvenidaLogin();
 
-            }
-            else{
+            })
+            .catch(function(error){
+
+                console.error(
+                    "Error de inicio de sesión:",
+                    error
+                );
 
                 if(mensaje){
 
-                    mensaje.textContent =
-                    "Usuario o contraseña incorrectos.";
+                    if(
+                        error.code ===
+                        "auth/invalid-credential"
+                    ){
+
+                        mensaje.textContent =
+                        "Correo o contraseña incorrectos.";
+
+                    }
+                    else if(
+                        error.code ===
+                        "auth/invalid-email"
+                    ){
+
+                        mensaje.textContent =
+                        "El correo no es válido.";
+
+                    }
+                    else if(
+                        error.code ===
+                        "auth/too-many-requests"
+                    ){
+
+                        mensaje.textContent =
+                        "Demasiados intentos. Intenta nuevamente más tarde.";
+
+                    }
+                    else{
+
+                        mensaje.textContent =
+                        "No se pudo iniciar sesión.";
+
+                    }
 
                 }
 
-            }
+            });
 
         }
     );
@@ -2951,52 +3003,63 @@ function cerrarSesion(){
         return;
     }
 
-    localStorage.removeItem(
-        LOGIN_STORAGE
-    );
+    auth
+    .signOut()
+    .then(function(){
 
-    const user =
-    document.getElementById(
-        "loginUser"
-    );
+        const user =
+        document.getElementById(
+            "loginUser"
+        );
 
-    const password =
-    document.getElementById(
-        "loginPassword"
-    );
+        const password =
+        document.getElementById(
+            "loginPassword"
+        );
 
-    if(user){
-        user.value="";
-    }
+        if(user){
+            user.value="";
+        }
 
-    if(password){
-        password.value="";
-    }
+        if(password){
+            password.value="";
+        }
 
-    showPage("inicio");
+        showPage("inicio");
 
-    mostrarLogin();
+        mostrarLogin();
+
+    })
+    .catch(function(error){
+
+        console.error(
+            "Error al cerrar sesión:",
+            error
+        );
+
+    });
 
 }
 
 
 function comprobarSesion(){
 
-    const sesion =
-    localStorage.getItem(
-        LOGIN_STORAGE
+    auth.onAuthStateChanged(
+        function(usuario){
+
+            if(usuario){
+
+                mostrarApp();
+
+            }
+            else{
+
+                mostrarLogin();
+
+            }
+
+        }
     );
-
-    if(sesion==="activo"){
-
-        mostrarApp();
-
-    }
-    else{
-
-        mostrarLogin();
-
-    }
 
 }
 
